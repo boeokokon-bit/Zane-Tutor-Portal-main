@@ -170,6 +170,7 @@ export const tutorApi = {
 
     const res = await fetch(`${API_BASE}/tutor/upload-photo`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
@@ -191,6 +192,7 @@ export const tutorApi = {
 
     const res = await fetch(`${API_BASE}/tutor/upload-doc`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },

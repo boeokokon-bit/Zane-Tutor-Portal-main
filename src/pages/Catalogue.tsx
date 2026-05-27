@@ -150,8 +150,8 @@ export default function Catalogue() {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2">Tutor Catalogue</h1>
-          <p className="text-muted-foreground text-lg">Find the perfect expert for your needs</p>
+          <h1 className="text-4xl font-bold mb-2">Meet Your Growth Partners</h1>
+          <p className="text-muted-foreground text-lg">Browse our roster of vetted academic architects and digital specialists. Every expert is backed by Zane’s diagnostic infrastructure to guarantee your success.</p>
         </div>
 
         {/* Catalogue Mode Tabs */}
@@ -244,6 +244,17 @@ export default function Catalogue() {
             <Button variant="link" onClick={clearFilters} className="mt-2">Clear filters</Button>
           </div>
         )}
+
+        <section className="mt-16 rounded-3xl border border-primary/10 bg-primary/5 p-10 text-center">
+          <p className="text-sm uppercase tracking-[0.24em] text-primary/70">Let Our Diagnostics Do the Matching</p>
+          <h2 className="mt-4 text-3xl font-semibold">Don’t guess which expert fits your child’s learning style.</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+            Let our Academic Fitness Index (AFI) pinpoint their exact cognitive gaps first, and we will automatically match you with the perfect specialist.
+          </p>
+          <Link to="/assessment" className="inline-flex mt-8 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition hover:bg-primary/90">
+            Start Diagnostic Assessment
+          </Link>
+        </section>
       </main>
 
       <TutorProfileDialog

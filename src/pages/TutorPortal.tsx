@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import StarRating from '@/components/catalogue/StarRating';
 import InlineProfileEditor from '@/components/portal/InlineProfileEditor';
 import GamificationPanel from '@/components/portal/GamificationPanel';
@@ -32,6 +33,7 @@ export default function TutorPortal() {
   });
   const [passwordForm, setPasswordForm] = useState({ current: '', newPass: '', confirm: '' });
   const [editMode, setEditMode] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const navigate = useNavigate();
 
@@ -62,6 +64,22 @@ export default function TutorPortal() {
     }
     toast.success('Password updated successfully');
     setPasswordForm({ current: '', newPass: '', confirm: '' });
+  };
+
+  const handleProfilePhotoChange = async (file: File) => {
+    if (!file) return;
+    setUploadingPhoto(true);
+    toast.loading('Uploading profile photo...', { id: 'profile-photo-upload' });
+
+    try {
+      const uploadResult = await tutorApi.uploadPhoto(file);
+      await updateProfile({ profilePhoto: uploadResult.url });
+      toast.success('Profile photo updated', { id: 'profile-photo-upload' });
+    } catch (err) {
+      toast.error('Failed to upload profile photo', { id: 'profile-photo-upload' });
+    } finally {
+      setUploadingPhoto(false);
+    }
   };
 
   const readFileAsDataURL = (file: File): Promise<string> => new Promise((resolve, reject) => {
@@ -181,8 +199,34 @@ export default function TutorPortal() {
                   <>
                     {/* Profile Preview */}
                     <div className="flex items-start gap-4">
-                      <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-bold text-primary">
-                        {user.firstName[0]}{user.lastName[0]}
+                      <div>
+                        <label htmlFor="profile-photo-upload" className="group relative block w-20 h-20 rounded-full overflow-hidden ring-4 ring-background shadow-lg cursor-pointer">
+                          <Avatar className="w-20 h-20">
+                            {user.profilePhoto ? (
+                              <AvatarImage src={user.profilePhoto} alt={`${user.firstName} ${user.lastName}`} />
+                            ) : (
+                              <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
+                                {user.firstName[0]}{user.lastName[0]}
+                              </AvatarFallback>
+                            )}
+                          </Avatar>
+                          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-opacity opacity-0 group-hover:bg-black/20 group-hover:opacity-100">
+                            <span className="text-[10px] text-white uppercase tracking-[0.16em] px-2 py-1">Update</span>
+                          </div>
+                        </label>
+                        <Input
+                          id="profile-photo-upload"
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={async e => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            await handleProfilePhotoChange(file);
+                            e.target.value = '';
+                          }}
+                        />
+                        {uploadingPhoto && <p className="text-[11px] text-muted-foreground mt-1">Uploading photo...</p>}
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold">{user.firstName} {user.lastName}</h3>
