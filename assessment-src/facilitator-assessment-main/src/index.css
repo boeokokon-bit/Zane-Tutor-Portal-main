@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ZaneTutors Tutor Assessment — Clean Professional Theme */
+
+@layer base {
+  :root {
+    /* Clean white/light background */
+    --background: 0 0% 98%;
+    --foreground: 240 20% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 20% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 20% 12%;
+
+    /* ZaneTutors Navy Primary */
+    --primary: 240 100% 17%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Light gray secondary */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 240 20% 12%;
+
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 48%;
+
+    /* Neutral gray accent */
+    --accent: 0 0% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 240 100% 17%;
+
+    --radius: 0.625rem;
+
+    /* Status Colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+
+    /* JAMB Green - kept for pass states */
+    --jamb: 145 63% 32%;
+    --jamb-foreground: 0 0% 100%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(240 100% 17%) 0%, hsl(240 60% 28%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(0 0% 96%) 0%, hsl(0 0% 93%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(240 100% 17%) 0%, hsl(240 40% 35%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(240 100% 17% / 0.04) 0%, hsl(0 0% 48% / 0.02) 100%);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 48%;
+    --sidebar-primary: 240 100% 17%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 240 20% 12%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 240 100% 17%;
+  }
+
+  .dark {
+    --background: 240 15% 8%;
+    --foreground: 0 0% 96%;
+
+    --card: 240 15% 12%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 240 15% 12%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 240 60% 28%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 10% 16%;
+    --secondary-foreground: 0 0% 96%;
+
+    --muted: 240 10% 18%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 0 0% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 0 0% 96%;
+
+    --border: 240 10% 20%;
+    --input: 240 10% 20%;
+    --ring: 240 60% 28%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+
+    --jamb: 145 63% 38%;
+    --jamb-foreground: 0 0% 100%;
+
+    --sidebar-background: 240 15% 10%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 240 60% 28%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 10% 18%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 240 10% 20%;
+    --sidebar-ring: 240 60% 28%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+  
+  .gradient-accent {
+    background: var(--gradient-accent);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.4s ease-out forwards;
+  }
+
+  .animate-score-reveal {
+    animation: score-reveal 1.5s ease-out forwards;
+  }
+
+  .animate-progress {
+    animation: progress 1s ease-out forwards;
+  }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes scale-in {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slide-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes progress {
+  0% { width: 0%; }
+}
+
+@keyframes score-reveal {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
