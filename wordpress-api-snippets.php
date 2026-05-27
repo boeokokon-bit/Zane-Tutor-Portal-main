@@ -470,7 +470,7 @@ function zane_admin_nudge_tutor($request) {
         wp_mail(
             $user->user_email,
             'Complete Your Zane Tutors Profile',
-            "Hi {$user->first_name},\n\nYou're almost done setting up your tutor profile! Please log in to complete your {$step} step.\n\nVisit: https://facilitator.zanetutors.com.ng\n\nBest,\nZane Tutors Team"
+            "Hi {$user->first_name},\n\nYou're almost done setting up your tutor profile! Please log in to complete your {$step} step.\n\nVisit: https://book.zanetutors.com.ng\n\nBest,\nZane Tutors Team"
         );
     }
     
@@ -582,6 +582,7 @@ add_action('rest_api_init', function() {
     add_filter('rest_pre_serve_request', function($value) {
         $origin = get_http_origin();
         $allowed_origins = [
+            'https://book.zanetutors.com.ng',
             'https://classes.zanetutors.com.ng',
             'https://facilitator.zanetutors.com.ng',
             'https://zane-tutor-portal.vercel.app',
@@ -606,6 +607,7 @@ add_action('init', function() {
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
         $allowed_origins = [
+            'https://book.zanetutors.com.ng',
             'https://classes.zanetutors.com.ng',
             'https://facilitator.zanetutors.com.ng',
             'https://zane-tutor-portal.vercel.app',

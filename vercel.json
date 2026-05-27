@@ -1,12 +1,7 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/facilitator/assets/:path*",
-      "destination": "/assets/:path*"
-    },
-    {
-      "source": "/facilitator/:path*",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]

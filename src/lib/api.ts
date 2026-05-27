@@ -31,17 +31,44 @@ const API_BASE = import.meta.env.VITE_WP_API_URL || 'https://facilitator.zanetut
 
 // ── Token management ──
 const TOKEN_KEY = 'zane_auth_token';
+const COOKIE_NAME = 'zane_auth_token';
+const COOKIE_DOMAIN = '.zanetutors.com.ng';
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
+
+function getCookieValue(name: string): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(new RegExp('(^|; )' + name.replace(/([.$?*|{}()\[\]\\/+^])/g, '\\$1') + '=([^;]*)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function setCookieValue(name: string, value: string) {
+  if (typeof document === 'undefined') return;
+  const secure = window.location.protocol === 'https:';
+  let cookie = `${name}=${encodeURIComponent(value)};path=/;max-age=${COOKIE_MAX_AGE};SameSite=None;domain=${COOKIE_DOMAIN}`;
+  if (secure) cookie += ';Secure';
+  document.cookie = cookie;
+}
+
+function removeCookie(name: string) {
+  if (typeof document === 'undefined') return;
+  const secure = window.location.protocol === 'https:';
+  let cookie = `${name}=;path=/;max-age=0;SameSite=None;domain=${COOKIE_DOMAIN}`;
+  if (secure) cookie += ';Secure';
+  document.cookie = cookie;
+}
 
 export function getToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY);
+  return localStorage.getItem(TOKEN_KEY) || getCookieValue(COOKIE_NAME);
 }
 
 export function setToken(token: string) {
   localStorage.setItem(TOKEN_KEY, token);
+  setCookieValue(COOKIE_NAME, token);
 }
 
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
+  removeCookie(COOKIE_NAME);
 }
 
 // ── Base fetch helper ──
@@ -62,6 +89,7 @@ async function apiFetch<T>(
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   if (!res.ok) {

@@ -604,7 +604,7 @@ add_action('rest_api_init', function() {
     remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
     add_filter('rest_pre_serve_request', function($value) {
         $origin = get_http_origin();
-        $allowed = ['https://classes.zanetutors.com.ng', 'https://facilitator.zanetutors.com.ng', 'https://zane-tutor-portal.vercel.app', 'http://localhost:5173'];
+        $allowed = ['https://book.zanetutors.com.ng', 'https://classes.zanetutors.com.ng', 'https://facilitator.zanetutors.com.ng', 'https://zane-tutor-portal.vercel.app', 'http://localhost:5173'];
         if (in_array($origin, $allowed) || preg_match('/\.lovable\.app$/', parse_url($origin, PHP_URL_HOST) ?? '')) {
             header("Access-Control-Allow-Origin: $origin");
             header('Access-Control-Allow-Credentials: true');

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -228,6 +228,12 @@ export default function Login() {
                 </Card>
               </TabsContent>
             </Tabs>
+
+            <div className="mt-6 text-sm text-muted-foreground">
+              <p>
+                By using this portal, you agree to our <Link className="text-primary underline" to="/terms">Terms of Use</Link> and <Link className="text-primary underline" to="/privacy">Privacy Policy</Link>.
+              </p>
+            </div>
           </div>
 
           {/* Right: Informational Panel */}
