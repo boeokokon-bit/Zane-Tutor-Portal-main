@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { catalogueApi } from '@/lib/api';
+import { toast } from 'sonner';
 import { GraduationCap, Search, X } from 'lucide-react';
 import TutorCard from '@/components/catalogue/TutorCard';
 import TutorProfileDialog from '@/components/catalogue/TutorProfileDialog';
@@ -106,6 +108,40 @@ export default function Catalogue() {
 
   const hasFilters = search || subject || location || level || pricing || verification || classType;
 
+  // Quick-match (hero) form state
+  const QUICK_MATCH_OPTIONS = [
+    'NCEE', 'BECE', 'WAEC', 'NECO', 'JAMB', 'IELTS', 'Learning Support', 'Tech/Coding', 'Skills', 'Other'
+  ];
+  const [parentName, setParentName] = useState('');
+  const [parentEmail, setParentEmail] = useState('');
+  const [parentPhone, setParentPhone] = useState('');
+  const [childOption, setChildOption] = useState('');
+  const [quickLoading, setQuickLoading] = useState(false);
+
+  const submitQuickMatch = async () => {
+    if (!parentName.trim()) return toast.error('Please enter your name');
+    if (!parentPhone.trim()) return toast.error('Please enter your phone number');
+    if (!childOption) return toast.error('Please select the child\'s class/exam');
+
+    setQuickLoading(true);
+    try {
+      await catalogueApi.submitLead({
+        tutorId: '',
+        tutorName: 'Quick Match',
+        parentName: parentName.trim(),
+        parentEmail: parentEmail.trim(),
+        parentPhone: parentPhone.trim(),
+        message: `Quick match: ${childOption}`,
+      });
+      toast.success('Thanks — we received your request. We will match you shortly.');
+      setParentName(''); setParentEmail(''); setParentPhone(''); setChildOption('');
+    } catch (err) {
+      toast.error('Failed to submit. Please try again later.');
+    } finally {
+      setQuickLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-muted/30">
       <header className="bg-primary text-primary-foreground">
@@ -149,9 +185,42 @@ export default function Catalogue() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2">Meet Your Growth Partners</h1>
-          <p className="text-muted-foreground text-lg">Browse our roster of vetted academic architects and digital specialists. Every expert is backed by Zane’s diagnostic infrastructure to guarantee your success.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-8">
+          <div className="md:pr-6">
+            <h1 className="text-4xl font-bold mb-2">Meet Your Growth Partners</h1>
+            <p className="text-muted-foreground text-lg">Browse our roster of vetted academic architects and digital specialists. Every expert is backed by Zane’s diagnostic infrastructure to guarantee your success.</p>
+          </div>
+
+          <div>
+            <Card className="shadow-lg">
+              <CardContent className="p-4">
+                <h3 className="text-lg font-semibold mb-2">Quick Match — Request an Expert</h3>
+                <p className="text-xs text-muted-foreground mb-3">No time to browse? Submit a few details and we’ll match you with the right tutor.</p>
+                <div className="grid grid-cols-1 gap-2">
+                  <label className="text-xs text-muted-foreground">Your Name</label>
+                  <Input value={parentName} onChange={e => setParentName(e.target.value)} placeholder="e.g. Mr. Ahmed" />
+
+                  <label className="text-xs text-muted-foreground">Child's Class / Exam</label>
+                  <Select value={childOption} onValueChange={setChildOption}>
+                    <SelectTrigger><SelectValue placeholder="Select option" /></SelectTrigger>
+                    <SelectContent>
+                      {QUICK_MATCH_OPTIONS.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+
+                  <label className="text-xs text-muted-foreground">Phone Number</label>
+                  <Input value={parentPhone} onChange={e => setParentPhone(e.target.value)} placeholder="e.g. 08012345678" />
+
+                  <label className="text-xs text-muted-foreground">Email (optional)</label>
+                  <Input value={parentEmail} onChange={e => setParentEmail(e.target.value)} placeholder="you@domain.com" />
+
+                  <Button className="mt-2" onClick={submitQuickMatch} disabled={quickLoading}>
+                    {quickLoading ? 'Sending…' : 'Request an Expert Match'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Catalogue Mode Tabs */}
