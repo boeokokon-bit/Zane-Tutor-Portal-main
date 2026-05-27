@@ -11,6 +11,7 @@ import { LOCATIONS, LmsTeachingTrack } from '@/types/tutor';
 import { toast } from 'sonner';
 import { Logo } from '@/components/Logo';
 import { Loader2, Package, Calendar, Rocket, CheckCircle2 } from 'lucide-react';
+import Footer from '@/components/layout/Footer';
 
 export default function Login() {
   const { login, signup } = useAuth();
@@ -350,6 +351,8 @@ export default function Login() {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }

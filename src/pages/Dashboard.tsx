@@ -8,6 +8,7 @@ import VerificationStep from '@/components/onboarding/VerificationStep';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
 import { GraduationCap, LogOut, Users, BookOpen, User, Laptop } from 'lucide-react';
+import Footer from '@/components/layout/Footer';
 import { resolveLane, laneNeedsAssessment, getRequiredAssessments, LANE_LABELS } from '@/lib/lanes';
 
 export default function Dashboard() {
@@ -118,6 +119,8 @@ export default function Dashboard() {
           {renderStep()}
         </div>
       </main>
+      
+      <Footer />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import Footer from '@/components/layout/Footer';
 
 export default function PrivacyPolicy() {
   return (
@@ -86,6 +87,8 @@ export default function PrivacyPolicy() {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }

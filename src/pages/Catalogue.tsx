@@ -11,6 +11,7 @@ import TutorCard from '@/components/catalogue/TutorCard';
 import TutorProfileDialog from '@/components/catalogue/TutorProfileDialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Crown, BookOpen } from 'lucide-react';
+import Footer from '@/components/layout/Footer';
 
 export default function Catalogue() {
   const { allTutors, user, refreshTutors, settings } = useAuth();
@@ -250,6 +251,8 @@ export default function Catalogue() {
         open={!!selectedTutor}
         onOpenChange={(open) => !open && setSelectedTutor(null)}
       />
+      
+      <Footer />
     </div>
   );
 }
