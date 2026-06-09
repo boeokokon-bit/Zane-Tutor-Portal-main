@@ -1,6 +1,7 @@
 import { Link, useLocation, NavLink as RouterNavLink, NavLinkProps } from 'react-router-dom';
 import { forwardRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Logo } from '@/components/Logo';
 import { Home, ExternalLink, User, LogOut, LayoutDashboard, Shield, Menu as MenuIcon, Copy } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -42,20 +43,9 @@ function Header() {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Link to="/" className="flex items-center gap-2 mr-4">
-              <span className="text-xl font-bold gradient-text">ZaneTutors</span>
+            <Link to="/" className="flex items-center gap-2">
+              <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="sr-only" />
             </Link>
-            
-            <div className="hidden md:flex items-center gap-2">
-              {!isHome && (
-                <Link to="/">
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <Home className="w-4 h-4" />
-                    <span>Home</span>
-                  </Button>
-                </Link>
-              )}
-            </div>
 
             <div className="md:hidden">
               <Drawer open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -93,6 +83,29 @@ function Header() {
                 </DrawerContent>
               </Drawer>
             </div>
+          </div>
+
+          <div className="hidden md:flex flex-1 justify-center items-center gap-3">
+            {!isHome && (
+              <Link to="/">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <Home className="w-4 h-4" />
+                  <span>Home</span>
+                </Button>
+              </Link>
+            )}
+            <Link to="/catalogue">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <ExternalLink className="w-4 h-4" />
+                <span className="hidden sm:inline">Catalogue</span>
+              </Button>
+            </Link>
+            <Link to="/training">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <BookOpen className="w-4 h-4" />
+                <span className="hidden sm:inline">Training</span>
+              </Button>
+            </Link>
           </div>
 
           <div className="hidden md:flex items-center gap-2">
