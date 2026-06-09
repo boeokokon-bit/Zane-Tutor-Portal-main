@@ -63,7 +63,7 @@ export default function InlineProfileEditor() {
       </div>
       <Progress value={progress} className="h-2" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
         <div className="space-y-2">
           <Label>First Name</Label>
           <Input value={form.firstName} onChange={e => setForm(p => ({ ...p, firstName: e.target.value }))} />
@@ -107,7 +107,7 @@ export default function InlineProfileEditor() {
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 w-full">
         <Label>Subjects You Teach</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {SUBJECTS.map(s => (
@@ -119,7 +119,7 @@ export default function InlineProfileEditor() {
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 w-full">
         <Label>Preferred Teaching Levels</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {LEVELS.map(l => (

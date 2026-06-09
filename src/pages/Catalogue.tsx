@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { catalogueApi } from '@/lib/api';
 import { toast } from 'sonner';
-import { GraduationCap, Search, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
+import { Logo } from '@/components/Logo';
 import TutorCard from '@/components/catalogue/TutorCard';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Crown, BookOpen } from 'lucide-react';
@@ -144,11 +145,7 @@ export default function Catalogue() {
       <header className="bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto flex flex-col gap-4 px-4 py-5 lg:flex-row lg:items-center lg:justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <GraduationCap className="w-7 h-7 text-primary" />
-            <div>
-              <p className="text-xs uppercase tracking-[0.32em] text-slate-500">Zane Tutors</p>
-              <h1 className="text-lg font-semibold text-slate-900">Discover Trusted Tutors</h1>
-            </div>
+            <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="font-semibold text-base" />
           </Link>
           <div className="flex flex-wrap items-center gap-2">
             {settings?.showAcademicsCatalogue && (
@@ -367,7 +364,7 @@ export default function Catalogue() {
             </div>
           ) : (
             <div className="rounded-[2rem] border border-slate-200 bg-white shadow-xl p-14 text-center">
-              <GraduationCap className="mx-auto mb-4 h-14 w-14 text-slate-400" />
+              <Logo variant="chrome" imgClassName="h-14 w-14 mx-auto opacity-40" textClassName="sr-only" />
               <h3 className="text-2xl font-semibold mb-2">No tutors found</h3>
               <p className="text-sm text-slate-500">Try adjusting your filters or request a quick match and we’ll recommend someone for you.</p>
               <Button variant="secondary" className="mt-6" onClick={() => document.getElementById('quick-match')?.scrollIntoView({ behavior: 'smooth' })}>Request a match</Button>
