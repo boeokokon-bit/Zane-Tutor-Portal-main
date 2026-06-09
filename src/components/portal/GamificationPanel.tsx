@@ -30,7 +30,7 @@ export default function GamificationPanel() {
   return (
     <div className="space-y-6">
       {/* Points Summary */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Card className="border-0 shadow-sm">
           <CardContent className="py-4 text-center">
             <Flame className="w-5 h-5 mx-auto text-orange-500 mb-1" />
@@ -74,7 +74,7 @@ export default function GamificationPanel() {
           <CardDescription>Earn badges by completing milestones and training</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {GAMIFICATION_BADGES.map(badge => {
               const earned = gam.badges.includes(badge.id);
               return (

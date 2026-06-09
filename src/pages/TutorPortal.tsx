@@ -295,7 +295,7 @@ export default function TutorPortal() {
 
                     <Separator />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                       <div>
                         <h4 className="font-semibold mb-2 text-sm">Subjects</h4>
                         <div className="flex flex-wrap gap-1.5">
@@ -310,7 +310,7 @@ export default function TutorPortal() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                       <div className="flex items-center gap-2">
                         <ShieldCheck className={`w-5 h-5 ${user.trcnCertified ? 'text-green-600' : 'text-muted-foreground'}`} />
                         <span className="text-sm">{user.trcnCertified ? 'TRCN Certified' : 'Not TRCN Certified'}</span>
@@ -369,7 +369,7 @@ export default function TutorPortal() {
                     )}
 
                     <Separator />
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="bg-muted/50 rounded-lg p-3 text-center">
                         <Eye className="w-4 h-4 mx-auto text-primary mb-1" />
                         <p className="text-lg font-bold">{user.profileViews || 0}</p>
