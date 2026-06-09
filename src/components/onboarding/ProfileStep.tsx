@@ -229,8 +229,8 @@ export default function ProfileStep() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-6 w-full">
+          <div className="grid grid-cols-1 gap-4 w-full">
             <div className="space-y-2">
                 <Label>Qualification{optionalText(requiresAcademicCredentials)}</Label>
                 <Input placeholder="e.g. B.Sc Mathematics" value={form.qualification} onChange={e => setForm(p => ({ ...p, qualification: e.target.value }))} />

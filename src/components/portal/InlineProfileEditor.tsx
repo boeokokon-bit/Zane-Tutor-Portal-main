@@ -63,7 +63,7 @@ export default function InlineProfileEditor() {
       </div>
       <Progress value={progress} className="h-2" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-1 gap-4 w-full">
         <div className="space-y-2">
           <Label>First Name</Label>
           <Input value={form.firstName} onChange={e => setForm(p => ({ ...p, firstName: e.target.value }))} />

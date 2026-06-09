@@ -16,7 +16,7 @@ export default function TestStep() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 w-full">
           <div className="space-y-4">
             <div className="flex gap-3">
               <div className="mt-1"><CheckCircle2 className="w-5 h-5 text-success" /></div>

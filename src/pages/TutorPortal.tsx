@@ -132,7 +132,7 @@ export default function TutorPortal() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-10">
-        <section className="grid gap-6 xl:grid-cols-[1.35fr_0.85fr]">
+        <section className="grid grid-cols-1 gap-6">
           <div className="rounded-[2rem] bg-gradient-to-r from-primary to-secondary p-8 text-white shadow-[0_32px_80px_-40px_rgba(14,165,233,0.55)]">
             <p className="text-sm uppercase tracking-[0.28em] text-white/80">Tutor Portal</p>
             <h1 className="mt-3 text-4xl font-semibold leading-tight">Your profile, verification, and tutoring toolkit.</h1>
