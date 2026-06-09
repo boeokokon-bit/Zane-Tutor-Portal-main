@@ -32,7 +32,14 @@ The Zane Tutor Portal is a unified, high-performance platform designed to manage
 -   **Step 3: Assessment**: Skill/knowledge testing to ensure quality.
 -   **Step 4: Verification**: Final admin review before appearing in the catalogue.
 
-### 3.4. Lead & Booking Management
+### 3.4. Desktop-first Responsive UX
+-   **Full-width forms**: Onboarding and portal profile questions render in a single-column layout on mobile and expand cleanly on desktop to maximize readability.
+-   **Portal dashboard**: Tutor portal sections such as profile status, verification alerts, quick actions and badges are arranged in full-width stacked cards for large screens.
+-   **Training hub**: Training pages use wider containers and responsive module cards to improve usability on desktop while preserving mobile stacking.
+-   **Shareable profile pages**: Tutors have dedicated public profile URLs at `/tutor/:tutorId` for easy sharing and direct access.
+-   **Removed modal-profile path**: Legacy popup-based tutor profile dialogs are deprecated in favor of dedicated profile pages.
+
+### 3.5. Lead & Booking Management
 -   **Booking Requests**: Parents can submit offers to specific tutors.
 -   **Admin Forwarding**: Admins can review and "Forward" leads to tutors.
 -   **Archive System**: Ability to clear processed leads from the active dashboard to keep it organized.
