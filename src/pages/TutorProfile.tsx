@@ -117,7 +117,7 @@ export default function TutorProfile() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <main className="max-w-6xl mx-auto px-4 py-10">
+      <main className="max-w-7xl mx-auto px-4 py-10">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.28em] text-primary/80">Tutor profile</p>

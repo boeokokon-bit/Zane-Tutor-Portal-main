@@ -209,7 +209,7 @@ export default function Training() {
   return (
     <div className="min-h-screen bg-muted/30">
       <header className="bg-primary text-primary-foreground">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Link to="/" className="flex items-center gap-2">
             <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="font-bold text-lg" />
             {isAdmin && <Badge variant="secondary" className="ml-2 text-xs">Admin</Badge>}
@@ -226,7 +226,7 @@ export default function Training() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-2">
           <Link to={isAdmin ? '/admin' : '/tutor'} className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
             <ArrowLeft className="w-3.5 h-3.5" /> Back to {isAdmin ? 'Admin Dashboard' : 'Portal'}
