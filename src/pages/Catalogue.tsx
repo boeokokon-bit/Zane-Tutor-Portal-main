@@ -10,7 +10,6 @@ import { catalogueApi } from '@/lib/api';
 import { toast } from 'sonner';
 import { GraduationCap, Search, X } from 'lucide-react';
 import TutorCard from '@/components/catalogue/TutorCard';
-import TutorProfileDialog from '@/components/catalogue/TutorProfileDialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Crown, BookOpen } from 'lucide-react';
 import Footer from '@/components/layout/Footer';
@@ -29,8 +28,6 @@ export default function Catalogue() {
   const [pricing, setPricing] = useState('');
   const [verification, setVerification] = useState('');
   const [classType, setClassType] = useState('');
-  const [selectedTutor, setSelectedTutor] = useState<TutorProfile | null>(null);
-  
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTab = (searchParams.get('tab') as 'academic' | 'skills') || (settings?.showAcademicsCatalogue ? 'academic' : 'skills');
   const [activeTab, setActiveTab] = useState<'academic' | 'skills'>(initialTab);
@@ -303,7 +300,7 @@ export default function Catalogue() {
         {filtered.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map(t => (
-              <TutorCard key={t.id} tutor={t} onClick={setSelectedTutor} />
+              <TutorCard key={t.id} tutor={t} />
             ))}
           </div>
         ) : (
@@ -326,12 +323,6 @@ export default function Catalogue() {
         </section>
       </main>
 
-      <TutorProfileDialog
-        tutor={selectedTutor}
-        open={!!selectedTutor}
-        onOpenChange={(open) => !open && setSelectedTutor(null)}
-      />
-      
       <Footer />
     </div>
   );

@@ -6,17 +6,18 @@ import { Button } from '@/components/ui/button';
 import { MapPin, Clock, BookOpen, CheckCircle, ShieldCheck, Monitor, Users, Repeat, Crown } from 'lucide-react';
 import StarRating from './StarRating';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface TutorCardProps {
   tutor: TutorProfile;
-  onClick: (tutor: TutorProfile) => void;
 }
 
 const classTypeIcon = { offline: Users, virtual: Monitor, hybrid: Repeat } as const;
 const classTypeLabel = { offline: 'In-Person', virtual: 'Virtual', hybrid: 'Hybrid' } as const;
 
-export default function TutorCard({ tutor, onClick }: TutorCardProps) {
+export default function TutorCard({ tutor }: TutorCardProps) {
   const { settings } = useAuth();
+  const navigate = useNavigate();
   const t = tutor;
   const firstName = t.firstName || '';
   const lastName = t.lastName || '';
@@ -33,7 +34,7 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
   return (
     <Card
       className={`border-0 shadow-md hover:shadow-xl transition-all cursor-pointer group overflow-hidden ${isTOTM ? 'ring-2 ring-amber-400' : ''}`}
-      onClick={() => onClick(t)}
+      onClick={() => navigate(`/tutor/${t.id}`)}
     >
       <CardContent className="p-0">
         {/* Profile Photo - Top */}
@@ -125,7 +126,7 @@ export default function TutorCard({ tutor, onClick }: TutorCardProps) {
             </p>
           )}
 
-          <Button size="sm" className="mt-4 w-full group-hover:bg-primary/90">
+          <Button size="sm" className="mt-4 w-full group-hover:bg-primary/90" onClick={(event) => { event.stopPropagation(); navigate(`/tutor/${t.id}`); }}>
             View Profile
           </Button>
         </div>
