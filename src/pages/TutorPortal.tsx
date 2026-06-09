@@ -101,39 +101,87 @@ export default function TutorPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="bg-primary text-primary-foreground">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="font-bold text-lg" />
-          </Link>
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <header className="bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto flex flex-col gap-4 px-4 py-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-sm hidden sm:block">Hi, {user.firstName}!</span>
-            <Button variant="outline" size="sm" onClick={() => window.open('https://classes.zanetutors.com.ng', '_blank')} className="gap-1.5 hidden md:flex text-primary bg-background/90 hover:bg-background border-primary/20">
-              <Laptop className="w-4 h-4" /> Go to LMS
+            <Link to="/" className="flex items-center gap-2">
+              <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="font-bold text-lg" />
+            </Link>
+            <p className="hidden text-sm text-slate-600 md:block">Your tutor operations hub.</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => window.open('https://classes.zanetutors.com.ng', '_blank')} className="gap-2 hidden md:inline-flex">
+              <Laptop className="w-4 h-4" /> LMS
             </Button>
             <Link to="/dashboard">
-              <Button variant="ghost" size="sm" className="text-primary-foreground hover:text-primary-foreground/80 hover:bg-primary-foreground/10">
-                <User className="w-4 h-4 mr-1" /> Dashboard
+              <Button variant="ghost" size="sm" className="gap-2">
+                <User className="w-4 h-4" /> Dashboard
               </Button>
             </Link>
             <Link to="/training">
-              <Button variant="ghost" size="sm" className="text-primary-foreground hover:text-primary-foreground/80 hover:bg-primary-foreground/10">
-                <BookOpen className="w-4 h-4 mr-1" /> Training
+              <Button variant="ghost" size="sm" className="gap-2">
+                <BookOpen className="w-4 h-4" /> Training
               </Button>
             </Link>
-            <Button variant="ghost" size="sm" onClick={() => { logout(); navigate('/login'); }} className="text-primary-foreground hover:text-primary-foreground/80 hover:bg-primary-foreground/10">
+            <Button variant="ghost" size="sm" onClick={() => { logout(); navigate('/login'); }} className="gap-2">
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-10">
+        <section className="grid gap-6 xl:grid-cols-[1.35fr_0.85fr]">
+          <div className="rounded-[2rem] bg-gradient-to-r from-primary to-secondary p-8 text-white shadow-[0_32px_80px_-40px_rgba(14,165,233,0.55)]">
+            <p className="text-sm uppercase tracking-[0.28em] text-white/80">Tutor Portal</p>
+            <h1 className="mt-3 text-4xl font-semibold leading-tight">Your profile, verification, and tutoring toolkit.</h1>
+            <p className="mt-4 max-w-3xl text-sm text-white/90 leading-7">
+              Monitor your onboarding, update your public profile, and manage verification from one polished dashboard.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              <div className="rounded-[1.5rem] bg-white/10 p-5 ring-1 ring-white/10">
+                <p className="text-xs uppercase tracking-[0.24em] text-white/70">Onboarding</p>
+                <p className="mt-3 text-3xl font-semibold">{getOnboardingPercent()}%</p>
+              </div>
+              <div className="rounded-[1.5rem] bg-white/10 p-5 ring-1 ring-white/10">
+                <p className="text-xs uppercase tracking-[0.24em] text-white/70">Status</p>
+                <p className="mt-3 text-3xl font-semibold capitalize">{statusText}</p>
+              </div>
+              <div className="rounded-[1.5rem] bg-white/10 p-5 ring-1 ring-white/10">
+                <p className="text-xs uppercase tracking-[0.24em] text-white/70">Profile</p>
+                <p className="mt-3 text-3xl font-semibold">{user.firstName} {user.lastName}</p>
+              </div>
+            </div>
+          </div>
+
+          <aside className="space-y-6">
+            <Card className="rounded-[2rem] border border-slate-200 shadow-xl p-6">
+              <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Need action?</p>
+              <h2 className="mt-3 text-2xl font-semibold text-slate-900">Quick actions</h2>
+              <p className="mt-3 text-sm text-slate-600">Update your profile, refresh your data, or launch a new assessment.</p>
+              <div className="mt-6 grid gap-3">
+                <Button onClick={() => setEditMode(true)}>Update profile</Button>
+                <Button variant="outline" onClick={() => refreshProfile()}>Refresh profile</Button>
+                <Button variant="outline" onClick={() => navigate('/assessment')}>Start assessment</Button>
+              </div>
+            </Card>
+
+            <Card className="rounded-[2rem] bg-slate-950 text-white shadow-xl border border-white/10 p-6">
+              <p className="text-sm uppercase tracking-[0.24em] text-slate-400">Platform tips</p>
+              <ul className="mt-5 space-y-3 text-sm">
+                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-primary" /> Keep your profile current to rank higher.</li>
+                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-secondary" /> Upload documents before the next review.</li>
+                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-white" /> Use assessment insight to improve ranking.</li>
+              </ul>
+            </Card>
+          </aside>
+        </section>
+
         {isPending && (
-          <Card className="mb-6 border-yellow-200 bg-yellow-50">
-            <CardContent className="py-4 flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-600 shrink-0" />
+          <Card className="mb-6 border-yellow-200 bg-yellow-50 shadow-lg rounded-[2rem]">
+            <CardContent className="py-5 flex items-center gap-4">
+              <AlertCircle className="w-6 h-6 text-yellow-600" />
               <div>
                 <p className="font-semibold text-yellow-800">Your profile is under review</p>
                 <p className="text-sm text-yellow-700">Our team is reviewing your documents. You'll be notified once approved (typically 24-48 hours).</p>
@@ -142,9 +190,9 @@ export default function TutorPortal() {
           </Card>
         )}
         {user.isVerified && (
-          <Card className="mb-6 border-green-200 bg-green-50">
-            <CardContent className="py-4 flex items-center gap-3">
-              <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
+          <Card className="mb-6 border-green-200 bg-green-50 shadow-lg rounded-[2rem]">
+            <CardContent className="py-5 flex items-center gap-4">
+              <CheckCircle2 className="w-6 h-6 text-green-600" />
               <div>
                 <p className="font-semibold text-green-800">You're verified!</p>
                 <p className="text-sm text-green-700">Your profile is live on the catalogue. You can still update your details, documents, and preferences anytime.</p>
@@ -154,9 +202,9 @@ export default function TutorPortal() {
         )}
 
         {settings.portalNotice && (
-          <Card className="mb-6 border-primary/20 bg-primary/5">
-            <CardContent className="py-4 flex items-center gap-3">
-              <Bell className="w-5 h-5 text-primary shrink-0" />
+          <Card className="mb-6 border-primary/20 bg-primary/5 shadow-lg rounded-[2rem]">
+            <CardContent className="py-5 flex items-center gap-4">
+              <Bell className="w-6 h-6 text-primary" />
               <div>
                 <p className="text-sm font-medium text-primary/80">{settings.portalNotice}</p>
               </div>

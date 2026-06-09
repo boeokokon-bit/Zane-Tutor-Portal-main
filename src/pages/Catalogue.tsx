@@ -140,14 +140,17 @@ export default function Catalogue() {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="bg-primary text-primary-foreground">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <GraduationCap className="w-7 h-7" />
-            <span className="font-bold text-lg">Zane Tutors</span>
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <header className="bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-7xl mx-auto flex flex-col gap-4 px-4 py-5 lg:flex-row lg:items-center lg:justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <GraduationCap className="w-7 h-7 text-primary" />
+            <div>
+              <p className="text-xs uppercase tracking-[0.32em] text-slate-500">Zane Tutors</p>
+              <h1 className="text-lg font-semibold text-slate-900">Discover Trusted Tutors</h1>
+            </div>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {settings?.showAcademicsCatalogue && (
               <Button
                 variant={activeTab === 'academic' ? 'default' : 'secondary'}
@@ -155,7 +158,7 @@ export default function Catalogue() {
                 onClick={() => handleTabChange('academic')}
                 className="gap-2"
               >
-                <BookOpen className="w-4 h-4" /> Academic Tutors
+                <BookOpen className="w-4 h-4" /> Academic
               </Button>
             )}
             {settings?.showSkillsCatalogue && (
@@ -165,12 +168,12 @@ export default function Catalogue() {
                 onClick={() => handleTabChange('skills')}
                 className="gap-2"
               >
-                <Crown className="w-4 h-4" /> Skills Experts
+                <Crown className="w-4 h-4" /> Skills
               </Button>
             )}
             {user ? (
               <Link to="/dashboard">
-                <Button variant="secondary" size="sm">Dashboard</Button>
+                <Button variant="outline" size="sm">Dashboard</Button>
               </Link>
             ) : (
               <Link to="/login">
@@ -181,23 +184,132 @@ export default function Catalogue() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-8">
-          <div className="md:pr-6">
-            <h1 className="text-4xl font-bold mb-2">Meet Your Growth Partners</h1>
-            <p className="text-muted-foreground text-lg">Browse our roster of vetted academic architects and digital specialists. Every expert is backed by Zane’s diagnostic infrastructure to guarantee your success.</p>
-          </div>
+      <main className="max-w-7xl mx-auto px-4 py-10">
+        <div className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+          <section className="space-y-6">
+            <div className="rounded-[2rem] bg-gradient-to-r from-primary to-secondary p-8 text-white shadow-[0_32px_80px_-40px_rgba(14,165,233,0.55)]">
+              <div className="space-y-4">
+                <p className="text-sm uppercase tracking-[0.28em] text-white/80">Catalogue</p>
+                <h2 className="text-4xl font-semibold leading-tight">Find the right tutor for every goal.</h2>
+                <p className="max-w-3xl text-sm text-white/90 leading-7">
+                  Filter by subject, level, location, and verification status to match with tutors who are ready to support your child’s learning journey.
+                </p>
+              </div>
 
-          <div>
-            <Card className="shadow-lg">
-              <CardContent className="p-4">
-                <h3 className="text-lg font-semibold mb-2">Quick Match — Request an Expert</h3>
-                <p className="text-xs text-muted-foreground mb-3">No time to browse? Submit a few details and we’ll match you with the right tutor.</p>
-                <div className="grid grid-cols-1 gap-2">
-                  <label className="text-xs text-muted-foreground">Your Name</label>
+              <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                <div className="rounded-[1.5rem] bg-white/10 p-5 ring-1 ring-white/10">
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/70">Showing</p>
+                  <p className="mt-3 text-3xl font-semibold">{filtered.length}</p>
+                </div>
+                <div className="rounded-[1.5rem] bg-white/10 p-5 ring-1 ring-white/10">
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/70">Focus</p>
+                  <p className="mt-3 text-3xl font-semibold">{activeTab === 'academic' ? 'Academic' : 'Skills'}</p>
+                </div>
+                <div className="rounded-[1.5rem] bg-white/10 p-5 ring-1 ring-white/10">
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/70">Quick match</p>
+                  <p className="mt-3 text-3xl font-semibold">Instant request</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-6">
+              <div className="rounded-[2rem] bg-white shadow-xl border border-slate-200 p-6">
+                <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Search tutors</p>
+                    <h3 className="mt-2 text-2xl font-semibold text-slate-900">Refine your match</h3>
+                  </div>
+                  <Button variant="outline" onClick={clearFilters} disabled={!hasFilters}>Reset filters</Button>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  <div>
+                    <label className="text-sm font-medium text-slate-700">Search</label>
+                    <div className="relative mt-2">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                      <Input
+                        placeholder="Name, subject, location"
+                        className="pl-10"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-700">Subject</label>
+                    <Select value={subject} onValueChange={setSubject}>
+                      <SelectTrigger><SelectValue placeholder="Subject" /></SelectTrigger>
+                      <SelectContent>
+                        {SUBJECTS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-700">Level</label>
+                    <Select value={level} onValueChange={setLevel}>
+                      <SelectTrigger><SelectValue placeholder="Level" /></SelectTrigger>
+                      <SelectContent>
+                        {LEVELS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-700">Location</label>
+                    <Select value={location} onValueChange={setLocation}>
+                      <SelectTrigger><SelectValue placeholder="Location" /></SelectTrigger>
+                      <SelectContent>
+                        {LOCATIONS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-700">Price</label>
+                    <Select value={pricing} onValueChange={setPricing}>
+                      <SelectTrigger><SelectValue placeholder="Price" /></SelectTrigger>
+                      <SelectContent>
+                        {PRICING_RANGES.map(p => <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-700">Filters</label>
+                    <div className="grid gap-2">
+                      <Select value={verification} onValueChange={setVerification}>
+                        <SelectTrigger><SelectValue placeholder="Verification" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="verified">Verified Only</SelectItem>
+                          <SelectItem value="unverified">Unverified</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Select value={classType} onValueChange={setClassType}>
+                        <SelectTrigger><SelectValue placeholder="Class Type" /></SelectTrigger>
+                        <SelectContent>
+                          {CLASS_TYPES.map(ct => <SelectItem key={ct.value} value={ct.value}>{ct.label}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="quick-match" className="rounded-[2rem] bg-white shadow-xl border border-slate-200 p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Quick Match</p>
+                    <h3 className="mt-2 text-2xl font-semibold text-slate-900">Need an expert fast?</h3>
+                  </div>
+                  <Button onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>Contact our team</Button>
+                </div>
+                <div className="mt-4 grid gap-4">
+                  <label className="text-sm font-medium text-slate-700">Your Name</label>
                   <Input value={parentName} onChange={e => setParentName(e.target.value)} placeholder="e.g. Mr. Ahmed" />
 
-                  <label className="text-xs text-muted-foreground">Child's Class / Exam</label>
+                  <label className="text-sm font-medium text-slate-700">Child's Class / Exam</label>
                   <Select value={childOption} onValueChange={setChildOption}>
                     <SelectTrigger><SelectValue placeholder="Select option" /></SelectTrigger>
                     <SelectContent>
@@ -205,121 +317,62 @@ export default function Catalogue() {
                     </SelectContent>
                   </Select>
 
-                  <label className="text-xs text-muted-foreground">Phone Number</label>
-                  <Input value={parentPhone} onChange={e => setParentPhone(e.target.value)} placeholder="e.g. 08012345678" />
-
-                  <label className="text-xs text-muted-foreground">Email (optional)</label>
-                  <Input value={parentEmail} onChange={e => setParentEmail(e.target.value)} placeholder="you@domain.com" />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="text-sm font-medium text-slate-700">Phone Number</label>
+                      <Input value={parentPhone} onChange={e => setParentPhone(e.target.value)} placeholder="e.g. 08012345678" />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-700">Email (optional)</label>
+                      <Input value={parentEmail} onChange={e => setParentEmail(e.target.value)} placeholder="you@domain.com" />
+                    </div>
+                  </div>
 
                   <Button className="mt-2" onClick={submitQuickMatch} disabled={quickLoading}>
                     {quickLoading ? 'Sending…' : 'Request an Expert Match'}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </div>
+          </section>
+
+          <aside className="space-y-6">
+            <div className="rounded-[2rem] bg-white shadow-xl border border-slate-200 p-6 sticky top-6">
+              <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Need guidance?</p>
+              <h2 className="mt-3 text-2xl font-semibold text-slate-900">Let us help you choose</h2>
+              <p className="mt-3 text-sm text-slate-600">If you’re not sure which tutor is best, request a quick match and we’ll recommend one based on your student’s needs.</p>
+              <div className="mt-5 grid gap-3">
+                <Button onClick={() => document.getElementById('quick-match')?.scrollIntoView({ behavior: 'smooth' })}>Request a match</Button>
+                <Button variant="outline" onClick={clearFilters} disabled={!hasFilters}>Reset filters</Button>
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] bg-slate-900 text-white shadow-xl border border-white/10 p-6">
+              <p className="text-sm uppercase tracking-[0.24em] text-slate-400">Why Zane Tutors</p>
+              <ul className="mt-5 space-y-3 text-sm">
+                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-primary" />Verified tutors only</li>
+                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-secondary" />Fast matching and booking</li>
+                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-white" />Student-approved teaching styles</li>
+              </ul>
+            </div>
+          </aside>
         </div>
 
-        {/* Catalogue Mode Tabs */}
-        {(settings?.showAcademicsCatalogue && settings?.showSkillsCatalogue) && (
-          <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-8">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-              <TabsTrigger value="academic" className="gap-2">
-                <BookOpen className="w-4 h-4" /> Academic Tutors
-              </TabsTrigger>
-              <TabsTrigger value="skills" className="gap-2">
-                <Crown className="w-4 h-4" /> Skills Experts
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        )}
-
-        {/* Search & Filters */}
-        <Card className="border-0 shadow-lg mb-8">
-          <CardContent className="p-6">
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                placeholder="Search by name, subject, or location..."
-                className="pl-10 h-12 text-base"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
+        <section className="mt-10">
+          {filtered.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map(t => (
+                <TutorCard key={t.id} tutor={t} />
+              ))}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              <Select value={subject} onValueChange={setSubject}>
-                <SelectTrigger><SelectValue placeholder="Subject" /></SelectTrigger>
-                <SelectContent>
-                  {SUBJECTS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger><SelectValue placeholder="Location" /></SelectTrigger>
-                <SelectContent>
-                  {LOCATIONS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <Select value={level} onValueChange={setLevel}>
-                <SelectTrigger><SelectValue placeholder="Level" /></SelectTrigger>
-                <SelectContent>
-                  {LEVELS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <Select value={pricing} onValueChange={setPricing}>
-                <SelectTrigger><SelectValue placeholder="Price Range" /></SelectTrigger>
-                <SelectContent>
-                  {PRICING_RANGES.map(p => <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <Select value={verification} onValueChange={setVerification}>
-                <SelectTrigger><SelectValue placeholder="Verification" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="verified">Verified Only</SelectItem>
-                  <SelectItem value="unverified">Unverified</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={classType} onValueChange={setClassType}>
-                <SelectTrigger><SelectValue placeholder="Class Type" /></SelectTrigger>
-                <SelectContent>
-                  {CLASS_TYPES.map(ct => <SelectItem key={ct.value} value={ct.value}>{ct.label}</SelectItem>)}
-                </SelectContent>
-              </Select>
+          ) : (
+            <div className="rounded-[2rem] border border-slate-200 bg-white shadow-xl p-14 text-center">
+              <GraduationCap className="mx-auto mb-4 h-14 w-14 text-slate-400" />
+              <h3 className="text-2xl font-semibold mb-2">No tutors found</h3>
+              <p className="text-sm text-slate-500">Try adjusting your filters or request a quick match and we’ll recommend someone for you.</p>
+              <Button variant="secondary" className="mt-6" onClick={() => document.getElementById('quick-match')?.scrollIntoView({ behavior: 'smooth' })}>Request a match</Button>
             </div>
-            {hasFilters && (
-              <div className="flex items-center justify-between mt-4 pt-4 border-t">
-                <span className="text-sm text-muted-foreground">{filtered.length} tutor{filtered.length !== 1 ? 's' : ''} found</span>
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  <X className="w-4 h-4 mr-1" /> Clear All
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Results - Vertical card grid */}
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map(t => (
-              <TutorCard key={t.id} tutor={t} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16 text-muted-foreground">
-            <GraduationCap className="w-12 h-12 mx-auto mb-4 opacity-40" />
-            <p className="text-lg">No tutors found matching your criteria.</p>
-            <Button variant="link" onClick={clearFilters} className="mt-2">Clear filters</Button>
-          </div>
-        )}
-
-        <section className="mt-16 rounded-3xl border border-primary/10 bg-primary/5 p-10 text-center">
-          <p className="text-sm uppercase tracking-[0.24em] text-primary/70">Let Our Diagnostics Do the Matching</p>
-          <h2 className="mt-4 text-3xl font-semibold">Don’t guess which expert fits your child’s learning style.</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            Let our Academic Fitness Index (AFI) pinpoint their exact cognitive gaps first, and we will automatically match you with the perfect specialist.
-          </p>
-          <Link to="/assessment" className="inline-flex mt-8 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition hover:bg-primary/90">
-            Start Diagnostic Assessment
-          </Link>
+          )}
         </section>
       </main>
 
