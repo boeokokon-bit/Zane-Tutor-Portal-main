@@ -5,19 +5,19 @@ import {
   TutorInfo, Subject, TeachingLevel,
   SUBJECT_LABELS, TEACHING_LEVEL_LABELS, LEVEL_SUBJECTS 
 } from '@/types/assessment';
-import { BookOpen, GraduationCap } from 'lucide-react';
+import { BookOpen, GraduationCap, Beaker, School, University } from 'lucide-react';
 
 interface TutorInfoStepProps {
   info: Partial<TutorInfo>;
   onChange: (info: Partial<TutorInfo>) => void;
 }
 
-const LEVEL_ICONS: Record<TeachingLevel, string> = {
-  lower_primary: '🎨',
-  upper_primary: '📚',
-  junior_secondary: '🔬',
-  senior_secondary: '🎓',
-  undergraduate: '🏛️',
+const LEVEL_ICONS: Record<TeachingLevel, React.ReactNode> = {
+  lower_primary: <BookOpen className="w-5 h-5 text-primary" />,
+  upper_primary: <GraduationCap className="w-5 h-5 text-primary" />,
+  junior_secondary: <Beaker className="w-5 h-5 text-primary" />,
+  senior_secondary: <School className="w-5 h-5 text-primary" />,
+  undergraduate: <University className="w-5 h-5 text-primary" />,
 };
 
 const TutorInfoStep = ({ info, onChange }: TutorInfoStepProps) => {
@@ -78,7 +78,7 @@ const TutorInfoStep = ({ info, onChange }: TutorInfoStepProps) => {
                   }
                 `}
               >
-                <span className="text-2xl">{LEVEL_ICONS[level]}</span>
+                <span className="flex-shrink-0">{LEVEL_ICONS[level]}</span>
                 <div className="flex-1">
                   <span className="font-semibold">{TEACHING_LEVEL_LABELS[level]}</span>
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -129,7 +129,7 @@ const TutorInfoStep = ({ info, onChange }: TutorInfoStepProps) => {
           </div>
           <p className={`text-sm mt-4 ${selectedCount >= 1 ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
             {selectedCount >= 1
-              ? `✓ ${selectedCount} subject${selectedCount > 1 ? 's' : ''} selected — ${selectedCount * 20} questions total`
+              ? `${selectedCount} subject${selectedCount > 1 ? 's' : ''} selected — ${selectedCount * 20} questions total`
               : 'Please select at least 1 subject'
             }
           </p>
