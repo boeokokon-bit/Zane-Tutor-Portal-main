@@ -18,6 +18,7 @@ interface AuthContextType {
   refreshTutors: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   updateTutorAdmin: (tutorId: string, data: Partial<TutorProfile>) => void;
+  updateSettings: (data: Partial<{ whatsappNumber: string; contactEmail: string; commissionRate: number; portalNotice: string; showSkillsCatalogue: boolean; showAcademicsCatalogue: boolean }>) => void;
   settings: { whatsappNumber: string; contactEmail: string; commissionRate: number; portalNotice: string; showSkillsCatalogue: boolean; showAcademicsCatalogue: boolean };
 }
 
@@ -141,6 +142,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSettings(prev => ({ ...prev, ...s }));
       } catch (e) {
         console.error("Failed to load settings", e);
+      }
+
+      const savedSettings = localStorage.getItem('zane_portal_settings');
+      if (savedSettings) {
+        try {
+          const parsed = JSON.parse(savedSettings);
+          setSettings(prev => ({ ...prev, ...parsed }));
+        } catch (e) {
+          console.error('Failed to parse saved portal settings', e);
+        }
       }
 
       if (USE_MOCK) {
@@ -309,6 +320,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAllTutors(prev => prev.map(t => t.id === tutorId ? { ...t, ...data } : t));
   }, []);
 
+  const updateSettings = useCallback((data: Partial<{ whatsappNumber: string; contactEmail: string; commissionRate: number; portalNotice: string; showSkillsCatalogue: boolean; showAcademicsCatalogue: boolean }>) => {
+    setSettings(prev => {
+      const updated = { ...prev, ...data };
+      localStorage.setItem('zane_portal_settings', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   const deleteTutor = useCallback(async (tutorId: string) => {
     if (USE_MOCK) {
       setAllTutors(prev => prev.filter(t => t.id !== tutorId));
@@ -343,7 +362,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user, isAdmin, allTutors, loading,
       login, signup, logout, updateProfile, advanceStep,
       verifyTutor, nudgeTutor, deleteTutor, refreshTutors, refreshProfile, updateTutorAdmin,
-      settings
+      updateSettings, settings
     }}>
       {children}
     </AuthContext.Provider>

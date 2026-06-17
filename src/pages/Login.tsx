@@ -10,8 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { LOCATIONS, LmsTeachingTrack } from '@/types/tutor';
 import { toast } from 'sonner';
 import { Logo } from '@/components/Logo';
-import { Loader2, Package, Calendar, Rocket, CheckCircle2 } from 'lucide-react';
+import { Loader2, Package, Calendar, Rocket, CheckCircle2, Users, Monitor, BookOpen, Briefcase, Award, TrendingUp, ShieldCheck, GraduationCap, Shield } from 'lucide-react';
 import Footer from '@/components/layout/Footer';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function Login() {
   const { login, signup } = useAuth();
@@ -25,6 +26,7 @@ export default function Login() {
     accountType: 'academic' as 'academic' | 'skill',
     portalIntent: 'teach' as 'teach' | 'lms',
     lmsTeachingTrack: 'general' as LmsTeachingTrack,
+    privacyConsent: false,
   });
 
   useEffect(() => {
@@ -50,6 +52,10 @@ export default function Login() {
     e.preventDefault();
     if (!signupForm.firstName || !signupForm.email || !signupForm.password) {
       toast.error('Please fill in all required fields');
+      return;
+    }
+    if (!signupForm.privacyConsent) {
+      toast.error('Please agree to the Privacy Policy to continue.');
       return;
     }
     setSubmitting(true);
@@ -93,12 +99,12 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-muted/20 to-muted/10">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border/50">
+      <div className="sticky top-0 z-40 bg-primary text-primary-foreground shadow-md">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="font-bold text-lg" />
           </div>
-          <p className="text-sm text-muted-foreground hidden sm:block">Tutor Onboarding Portal</p>
+          <p className="text-sm text-primary-foreground/80 hidden sm:block">Tutor Onboarding Portal</p>
         </div>
       </div>
 
@@ -159,8 +165,18 @@ export default function Login() {
                             <SelectValue placeholder="What is your goal?" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="teach">🚀 Teach with Zane (Join the Catalogue)</SelectItem>
-                            <SelectItem value="lms">💻 Use Classes LMS (Manage my own classes)</SelectItem>
+                            <SelectItem value="teach">
+                              <div className="flex items-center gap-2">
+                                <Rocket className="w-4 h-4 text-primary" />
+                                <span>Teach with Zane (Join the Catalogue)</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="lms">
+                              <div className="flex items-center gap-2">
+                                <Monitor className="w-4 h-4 text-primary" />
+                                <span>Use Classes LMS (Manage my own classes)</span>
+                              </div>
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -172,8 +188,18 @@ export default function Login() {
                               <SelectValue placeholder="Select LMS setup" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="general">Use LMS only - no academic certification needed</SelectItem>
-                              <SelectItem value="academic">Use LMS and teach academic subjects</SelectItem>
+                              <SelectItem value="general">
+                                <div className="flex items-center gap-2">
+                                  <BookOpen className="w-4 h-4 text-muted-foreground" />
+                                  <span>Use LMS only - no academic certification needed</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="academic">
+                                <div className="flex items-center gap-2">
+                                  <GraduationCap className="w-4 h-4 text-primary" />
+                                  <span>Use LMS and teach academic subjects</span>
+                                </div>
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -185,8 +211,18 @@ export default function Login() {
                             <SelectValue placeholder="Select path" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="academic">📚 Academic Tutor (Math, English, etc.)</SelectItem>
-                            <SelectItem value="skill">🎨 Skills Expert (AI, Baking, Fashion, etc.)</SelectItem>
+                            <SelectItem value="academic">
+                              <div className="flex items-center gap-2">
+                                <BookOpen className="w-4 h-4 text-primary" />
+                                <span>Academic Tutor (Math, English, etc.)</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="skill">
+                              <div className="flex items-center gap-2">
+                                <Briefcase className="w-4 h-4 text-accent" />
+                                <span>Skills Expert (AI, Baking, Fashion, etc.)</span>
+                              </div>
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -221,7 +257,22 @@ export default function Login() {
                         <Label>Password *</Label>
                         <Input type="password" placeholder="Min 6 characters" value={signupForm.password} onChange={e => setSignupForm(p => ({ ...p, password: e.target.value }))} />
                       </div>
-                      <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+                      {/* Privacy Consent */}
+                      <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border">
+                        <Checkbox
+                          id="signupConsent"
+                          checked={signupForm.privacyConsent}
+                          onCheckedChange={(checked) => setSignupForm(p => ({ ...p, privacyConsent: !!checked }))}
+                          className="mt-0.5"
+                        />
+                        <label htmlFor="signupConsent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
+                          I consent to Zane Tutors collecting and processing my personal data for account creation, onboarding, and tutoring services. I have read and agree to the{' '}
+                          <Link className="text-primary underline" to="/privacy" target="_blank">Privacy Policy</Link> and{' '}
+                          <Link className="text-primary underline" to="/terms" target="_blank">Terms of Use</Link>.
+                        </label>
+                      </div>
+
+                      <Button type="submit" className="w-full" size="lg" disabled={submitting || !signupForm.privacyConsent}>
                         {submitting ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating...</> : 'Create Account'}
                       </Button>
                     </form>
@@ -253,7 +304,9 @@ export default function Login() {
               <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl">📦</div>
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Package className="w-5 h-5 text-primary" />
+                    </div>
                     <div className="flex-1">
                       <CardTitle className="text-lg">Monthly Hourly Packages</CardTitle>
                       <CardDescription>For predictable, recurring income</CardDescription>
@@ -279,7 +332,9 @@ export default function Login() {
               <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-xl">🗓️</div>
+                    <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-accent" />
+                    </div>
                     <div className="flex-1">
                       <CardTitle className="text-lg">Public Catalogue Booking</CardTitle>
                       <CardDescription>Maximum flexibility & control</CardDescription>
@@ -293,9 +348,9 @@ export default function Login() {
                   <div className="bg-muted/50 rounded-lg p-3">
                     <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">Key Benefits</p>
                     <ul className="space-y-1.5 text-sm">
-                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" /> <span>100% control over rates & availability</span></li>
-                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" /> <span>Instant parent discovery</span></li>
-                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" /> <span>Real-time payment clearing</span></li>
+                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-accent shrink-0" /> <span>100% control over rates & availability</span></li>
+                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-accent shrink-0" /> <span>Instant parent discovery</span></li>
+                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-accent shrink-0" /> <span>Real-time payment clearing</span></li>
                     </ul>
                   </div>
                 </CardContent>
@@ -305,7 +360,9 @@ export default function Login() {
               <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-xl">🚀</div>
+                    <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
+                      <Rocket className="w-5 h-5 text-success" />
+                    </div>
                     <div className="flex-1">
                       <CardTitle className="text-lg">Scalable L-Series Cohorts (LMS)</CardTitle>
                       <CardDescription>For educators & school owners</CardDescription>
@@ -319,9 +376,9 @@ export default function Login() {
                   <div className="bg-muted/50 rounded-lg p-3">
                     <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">What You Get</p>
                     <ul className="space-y-1.5 text-sm">
-                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" /> <span>Automated payment & seat provisioning</span></li>
-                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" /> <span>Custom Google Workspace integration</span></li>
-                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" /> <span>Scale group learning easily</span></li>
+                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-success shrink-0" /> <span>Automated payment & seat provisioning</span></li>
+                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-success shrink-0" /> <span>Custom Google Workspace integration</span></li>
+                      <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-success shrink-0" /> <span>Scale group learning easily</span></li>
                     </ul>
                   </div>
                 </CardContent>
@@ -331,7 +388,9 @@ export default function Login() {
             {/* The Zane Earning Promise */}
             <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/2 shadow-md">
               <CardHeader>
-                <CardTitle className="text-lg text-primary">✨ The Zane Earning Promise</CardTitle>
+                <CardTitle className="text-lg text-primary flex items-center gap-2">
+                  <Award className="w-5 h-5" /> The Zane Earning Promise
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="space-y-2">

@@ -12,7 +12,7 @@ import { ArrowLeft, Save, Settings as SettingsIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminSettings() {
-  const { isAdmin, loading, settings } = useAuth();
+  const { isAdmin, loading, settings, updateSettings } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState(settings);
   const [saving, setSaving] = useState(false);
@@ -28,8 +28,8 @@ export default function AdminSettings() {
     try {
       // Persist remotely (no-op safely if endpoint unavailable in mock mode)
       try { await catalogueApi.updateSettings(form); } catch {}
-      // Persist locally so the rest of the app picks them up immediately
-      localStorage.setItem('zane_portal_settings', JSON.stringify(form));
+      // Persist to app state and local storage so changes apply immediately.
+      updateSettings(form);
       toast.success('Settings saved');
     } finally {
       setSaving(false);

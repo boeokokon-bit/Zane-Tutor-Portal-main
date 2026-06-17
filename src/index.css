@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Nunito:wght@400;600;700&family=Montserrat:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,83 +6,84 @@
 
 @layer base {
   :root {
-    --background: 0 0% 99%;
-    --foreground: 230 50% 15%;
+    /* Zane Tutors Brand — Navy leads, Blue accents, Green celebrates success */
+    --background: 0 0% 100%;
+    --foreground: 231 82% 15%;        /* #071244 body text */
 
     --card: 0 0% 100%;
-    --card-foreground: 230 50% 15%;
+    --card-foreground: 231 82% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 230 50% 15%;
+    --popover-foreground: 231 82% 15%;
 
-    --primary: 235 60% 25%;
+    --primary: 231 82% 15%;           /* Navy #071244 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 45 95% 55%;
-    --secondary-foreground: 230 50% 15%;
+    --secondary: 231 40% 92%;         /* Light navy-tinted grey */
+    --secondary-foreground: 231 82% 15%;
 
-    --muted: 230 20% 95%;
-    --muted-foreground: 230 15% 50%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;  /* #64748b */
 
-    --accent: 45 95% 55%;
-    --accent-foreground: 230 50% 15%;
+    --accent: 221 83% 53%;            /* Blue #2563eb for highlights/accents */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 60%;         /* Red for errors */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 230 20% 90%;
-    --input: 230 20% 90%;
-    --ring: 235 60% 25%;
+    --border: 214 32% 91%;            /* #e2e8f0 */
+    --input: 214 32% 91%;
+    --ring: 231 82% 15%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;               /* 14px cards, 10-12px buttons */
 
-    --sidebar-background: 235 60% 20%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 45 95% 55%;
-    --sidebar-primary-foreground: 230 50% 15%;
-    --sidebar-accent: 235 50% 30%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 235 40% 30%;
-    --sidebar-ring: 45 95% 55%;
+    --sidebar-background: 231 82% 15%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 231 82% 15%;
+    --sidebar-accent: 231 60% 22%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 231 60% 22%;
+    --sidebar-ring: 221 83% 53%;
 
-    --success: 145 65% 42%;
+    --success: 142 71% 45%;           /* Green #16a34a — success only */
     --success-foreground: 0 0% 100%;
-    --warning: 35 95% 55%;
-    --warning-foreground: 230 50% 15%;
+    --warning: 38 92% 50%;            /* Amber */
+    --warning-foreground: 0 0% 100%;
   }
 
   .dark {
-    --background: 230 50% 8%;
-    --foreground: 0 0% 95%;
-    --card: 230 45% 12%;
-    --card-foreground: 0 0% 95%;
-    --popover: 230 45% 12%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 45 95% 55%;
-    --primary-foreground: 230 50% 10%;
-    --secondary: 235 40% 30%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 230 30% 18%;
-    --muted-foreground: 230 15% 60%;
-    --accent: 45 95% 55%;
-    --accent-foreground: 230 50% 10%;
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 95%;
-    --border: 230 30% 20%;
-    --input: 230 30% 20%;
-    --ring: 45 95% 55%;
-    --sidebar-background: 230 50% 6%;
+    --background: 231 82% 8%;
+    --foreground: 0 0% 98%;
+    --card: 231 60% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 231 60% 12%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 221 83% 60%;           /* Lighter blue for dark mode primary */
+    --primary-foreground: 231 82% 15%;
+    --secondary: 231 40% 16%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 231 40% 16%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 221 83% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 231 40% 20%;
+    --input: 231 40% 20%;
+    --ring: 221 83% 60%;
+    --sidebar-background: 231 82% 10%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 45 95% 55%;
-    --sidebar-primary-foreground: 230 50% 10%;
-    --sidebar-accent: 230 40% 15%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 231 82% 15%;
+    --sidebar-accent: 231 60% 18%;
     --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 230 30% 15%;
-    --sidebar-ring: 45 95% 55%;
-    --success: 145 65% 42%;
+    --sidebar-border: 231 60% 18%;
+    --sidebar-ring: 221 83% 53%;
+    --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
-    --warning: 35 95% 55%;
-    --warning-foreground: 230 50% 15%;
+    --warning: 38 92% 53%;
+    --warning-foreground: 231 82% 15%;
   }
 }
 
@@ -92,10 +93,12 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Nunito', 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.5;
   }
   h1, h2, h3, h4 {
-    font-family: 'Poppins', 'Montserrat', ui-sans-serif, system-ui, sans-serif;
-    letter-spacing: -0.02em;
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    color: hsl(var(--primary));
   }
 }

@@ -177,12 +177,12 @@ export const getTutorRating = (score: number): TutorRating => {
   return 'foundational';
 };
 
-export const getTutorRatingEmoji = (rating: TutorRating): string => {
+export const getTutorRatingIcon = (rating: TutorRating): string => {
   switch (rating) {
-    case 'expert': return '⭐';
-    case 'proficient': return '👍';
-    case 'developing': return '⚠️';
-    case 'foundational': return '🔴';
+    case 'expert': return 'Award';
+    case 'proficient': return 'TrendingUp';
+    case 'developing': return 'AlertTriangle';
+    case 'foundational': return 'ArrowDown';
   }
 };
 

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ComponentType, type ReactNode, type SVGProps } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import {
+  ArrowLeft,
   BookOpen,
   MapPin,
   Clock,
@@ -46,6 +47,7 @@ function Section({ icon: Icon, title, children }: SectionProps) {
 }
 
 export default function TutorProfile() {
+  const navigate = useNavigate();
   const { tutorId } = useParams<{ tutorId: string }>();
   const { allTutors, refreshTutors, settings } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -118,6 +120,11 @@ export default function TutorProfile() {
   return (
     <div className="min-h-screen bg-muted/30">
       <main className="max-w-7xl mx-auto px-4 py-10">
+        <div className="mb-6">
+          <Button variant="outline" size="sm" onClick={() => navigate(-1)} className="gap-2">
+            <ArrowLeft className="w-4 h-4" /> Back
+          </Button>
+        </div>
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.28em] text-primary/80">Tutor profile</p>

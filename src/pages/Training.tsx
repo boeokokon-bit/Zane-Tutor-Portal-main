@@ -14,9 +14,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Separator } from '@/components/ui/separator';
 import { Logo } from '@/components/Logo';
 import { toast } from 'sonner';
+import Header from '@/components/layout/Header';
 import {
   GraduationCap, LogOut, BookOpen, Video, FileText, ExternalLink,
-  Play, Users, Clock, ArrowLeft, Plus, Pencil, Trash2, Upload, Link as LinkIcon, Laptop
+  Play, Users, Clock, ArrowLeft, Plus, Pencil, Trash2, Upload, Link as LinkIcon, Laptop, CheckCircle2
 } from 'lucide-react';
 
 interface TrainingItem {
@@ -208,23 +209,7 @@ export default function Training() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <header className="bg-primary text-primary-foreground">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="font-bold text-lg" />
-            {isAdmin && <Badge variant="secondary" className="ml-2 text-xs">Admin</Badge>}
-          </Link>
-          <div className="flex items-center gap-3">
-            {user && <span className="text-sm hidden sm:block">Hi, {user.firstName}!</span>}
-            <Button variant="outline" size="sm" onClick={() => window.open('https://classes.zanetutors.com.ng', '_blank')} className="gap-1.5 hidden md:flex text-primary bg-background/90 hover:bg-background border-primary/20">
-              <Laptop className="w-4 h-4" /> Go to LMS
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => { logout(); navigate('/login'); }} className="text-primary-foreground hover:text-primary-foreground/80 hover:bg-primary-foreground/10">
-              <LogOut className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-2">
@@ -255,7 +240,7 @@ export default function Training() {
                   <p className="text-sm text-muted-foreground">{completedModules} of {totalModules} modules completed</p>
                 </div>
                 <Badge variant={progress === 100 ? 'default' : 'secondary'}>
-                  {progress === 100 ? '✅ Complete' : `${progress}%`}
+                  {progress === 100 ? <><CheckCircle2 className="w-3 h-3 mr-1" /> Complete</> : `${progress}%`}
                 </Badge>
               </div>
               <Progress value={progress} className="h-2" />

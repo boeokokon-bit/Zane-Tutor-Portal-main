@@ -7,6 +7,7 @@ import TestStep from '@/components/onboarding/TestStep';
 import VerificationStep from '@/components/onboarding/VerificationStep';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
+import Header from '@/components/layout/Header';
 import { LogOut, Users, BookOpen, User, Laptop } from 'lucide-react';
 import Footer from '@/components/layout/Footer';
 import { resolveLane, getRequiredAssessments, LANE_LABELS } from '@/lib/lanes';
@@ -60,39 +61,12 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950/5 text-slate-900">
-      <header className="border-b border-slate-200/70 bg-white/80 backdrop-blur-xl text-slate-900 shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col gap-4 px-4 py-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2">
-              <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="font-bold text-lg" />
-            </Link>
-            <div className="hidden sm:block text-sm text-slate-600">Your profile control centre for teaching growth.</div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <Button variant="outline" size="sm" onClick={() => window.open('https://classes.zanetutors.com.ng', '_blank')} className="gap-2 hidden md:inline-flex">
-              <Laptop className="w-4 h-4" /> Go to LMS
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/tutor')} className="gap-2">
-              <User className="w-4 h-4" /> Portal
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/training')} className="gap-2">
-              <BookOpen className="w-4 h-4" /> Training
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/catalogue')} className="gap-2">
-              <Users className="w-4 h-4" /> Catalogue
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => { logout(); navigate('/login'); }} className="gap-2">
-              <LogOut className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="max-w-7xl mx-auto px-4 py-10">
         <div className="grid gap-8 xl:grid-cols-[1.35fr_0.9fr]">
           <section className="space-y-8">
-            <div className="overflow-hidden rounded-[2rem] bg-gradient-to-r from-primary to-secondary p-8 text-white shadow-[0_35px_60px_-30px_rgba(14,165,233,0.75)]">
+            <div className="overflow-hidden rounded-[2rem] bg-gradient-to-r from-primary to-[#1a1a5e] p-8 text-white shadow-[0_35px_60px_-30px_rgba(7,18,68,0.75)]">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                 <div className="space-y-4">
                   <p className="text-sm uppercase tracking-[0.32em] text-white/80">Tutor Dashboard</p>
@@ -179,9 +153,9 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="mt-5 grid gap-3">
-                <Button size="md" onClick={() => navigate('/dashboard?edit=profile')}>Update profile details</Button>
-                <Button variant="outline" size="md" onClick={() => navigate('/tutor')}>Open tutor portal</Button>
-                <Button variant="outline" size="md" onClick={() => navigate('/training')}>Review training resources</Button>
+                <Button onClick={() => navigate('/dashboard?edit=profile')}>Update profile details</Button>
+                <Button variant="outline" onClick={() => navigate('/tutor')}>Open tutor portal</Button>
+                <Button variant="outline" onClick={() => navigate('/training')}>Review training resources</Button>
               </div>
             </div>
           </aside>

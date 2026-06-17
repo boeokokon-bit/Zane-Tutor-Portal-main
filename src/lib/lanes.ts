@@ -1,4 +1,5 @@
 import { TutorProfile } from '@/types/tutor';
+import { ACADEMIC_SUBJECTS, SKILL_SUBJECTS, LEVELS } from '@/types/tutor';
 
 export type Lane =
   | 'academic_monthly'
@@ -132,4 +133,36 @@ export function laneNeedsAssessment(lane: Lane): boolean {
   const req = getRequiredAssessments(lane);
   // Any non-skip step means the assessment screen is meaningful
   return req.subject !== 'skip' || req.digital !== 'skip' || req.psych !== 'skip';
+}
+
+/**
+ * Subject list a lane should pick from.
+ * - Academic lanes (catalogue/monthly + lms_academic) → school subjects.
+ * - Skills lane + lms_creator → skill-oriented subjects.
+ */
+export function getSubjectListForLane(lane: Lane): string[] {
+  switch (lane) {
+    case 'skills':
+    case 'lms_creator':
+      return SKILL_SUBJECTS;
+    case 'academic_monthly':
+    case 'academic_catalogue':
+    case 'lms_academic':
+      return ACADEMIC_SUBJECTS;
+    case 'admin':
+    default:
+      return [...ACADEMIC_SUBJECTS, ...SKILL_SUBJECTS];
+  }
+}
+
+/**
+ * Whether school-grade levels (Lower Primary → Postgraduate) are meaningful
+ * for this lane. Skills and LMS-creator lanes don't use them.
+ */
+export function laneUsesSchoolLevels(lane: Lane): boolean {
+  return lane === 'academic_monthly' || lane === 'academic_catalogue' || lane === 'lms_academic';
+}
+
+export function getLevelListForLane(lane: Lane): string[] {
+  return laneUsesSchoolLevels(lane) ? LEVELS : [];
 }

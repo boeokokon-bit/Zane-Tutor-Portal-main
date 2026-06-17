@@ -15,13 +15,14 @@ import StarRating from '@/components/catalogue/StarRating';
 import InlineProfileEditor from '@/components/portal/InlineProfileEditor';
 import GamificationPanel from '@/components/portal/GamificationPanel';
 import { Logo } from '@/components/Logo';
+import Header from '@/components/layout/Header';
 import { toast } from 'sonner';
 import {
   GraduationCap, LogOut, User, Settings, Bell, Eye, BookOpen, Clock,
   MapPin, Briefcase, Award, ShieldCheck, CheckCircle2, AlertCircle, Upload, FileText,
-  Trophy, Pencil, Calendar, Phone, ArrowRight, Laptop, Brain
+  Trophy, Pencil, Calendar, Phone, ArrowRight, Laptop, Brain, RefreshCw, Repeat, Monitor, Users
 } from 'lucide-react';
-import { tutorApi } from '@/lib/api';
+import { authApi, tutorApi } from '@/lib/api';
 
 export default function TutorPortal() {
   const { user, loading, logout, updateProfile, refreshProfile, settings } = useAuth();
@@ -56,14 +57,23 @@ export default function TutorPortal() {
   const statusColor = user.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
   const statusText = user.isVerified ? 'Verified' : (user.verificationStatus === 'rejected' ? 'Needs Revision' : 'Pending Review');
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordForm.newPass !== passwordForm.confirm) {
       toast.error('Passwords do not match');
       return;
     }
-    toast.success('Password updated successfully');
-    setPasswordForm({ current: '', newPass: '', confirm: '' });
+    if (passwordForm.newPass.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+    try {
+      await authApi.changePassword(passwordForm.current, passwordForm.newPass);
+      toast.success('Password updated successfully');
+      setPasswordForm({ current: '', newPass: '', confirm: '' });
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to update password. Check your current password.');
+    }
   };
 
   const handleProfilePhotoChange = async (file: File) => {
@@ -102,38 +112,11 @@ export default function TutorPortal() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col gap-4 px-4 py-5 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2">
-              <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="font-bold text-lg" />
-            </Link>
-            <p className="hidden text-sm text-slate-600 md:block">Your tutor operations hub.</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => window.open('https://classes.zanetutors.com.ng', '_blank')} className="gap-2 hidden md:inline-flex">
-              <Laptop className="w-4 h-4" /> LMS
-            </Button>
-            <Link to="/dashboard">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <User className="w-4 h-4" /> Dashboard
-              </Button>
-            </Link>
-            <Link to="/training">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <BookOpen className="w-4 h-4" /> Training
-              </Button>
-            </Link>
-            <Button variant="ghost" size="sm" onClick={() => { logout(); navigate('/login'); }} className="gap-2">
-              <LogOut className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="max-w-7xl mx-auto px-4 py-10">
         <section className="grid grid-cols-1 gap-6">
-          <div className="rounded-[2rem] bg-gradient-to-r from-primary to-secondary p-8 text-white shadow-[0_32px_80px_-40px_rgba(14,165,233,0.55)]">
+          <div className="rounded-[2rem] bg-gradient-to-r from-primary to-[#1a1a5e] p-8 text-white shadow-[0_32px_80px_-40px_rgba(7,18,68,0.55)]">
             <p className="text-sm uppercase tracking-[0.28em] text-white/80">Tutor Portal</p>
             <h1 className="mt-3 text-4xl font-semibold leading-tight">Your profile, verification, and tutoring toolkit.</h1>
             <p className="mt-4 max-w-3xl text-sm text-white/90 leading-7">
@@ -155,26 +138,55 @@ export default function TutorPortal() {
             </div>
           </div>
 
-          <aside className="space-y-6">
+          <aside className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="rounded-[2rem] border border-slate-200 shadow-xl p-6">
               <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Need action?</p>
-              <h2 className="mt-3 text-2xl font-semibold text-slate-900">Quick actions</h2>
-              <p className="mt-3 text-sm text-slate-600">Update your profile, refresh your data, or launch a new assessment.</p>
-              <div className="mt-6 grid gap-3">
-                <Button onClick={() => setEditMode(true)}>Update profile</Button>
-                <Button variant="outline" onClick={() => refreshProfile()}>Refresh profile</Button>
-                <Button variant="outline" onClick={() => navigate('/assessment')}>Start assessment</Button>
+              <h2 className="mt-3 text-xl font-semibold text-slate-900">Quick actions</h2>
+              <p className="mt-2 text-sm text-slate-600">Update your profile, refresh your data, or launch a new assessment.</p>
+              <div className="mt-4 grid gap-2">
+                <Button size="sm" onClick={() => setEditMode(true)}>Update profile</Button>
+                <Button size="sm" variant="outline" onClick={() => refreshProfile()}>Refresh profile</Button>
+                <Button size="sm" variant="outline" onClick={() => navigate('/assessment')}>Start assessment</Button>
+                <Button size="sm" variant="outline" onClick={() => window.open(`/tutor/${user.id}`, '_blank')}>View my public profile</Button>
               </div>
             </Card>
 
             <Card className="rounded-[2rem] bg-slate-950 text-white shadow-xl border border-white/10 p-6">
               <p className="text-sm uppercase tracking-[0.24em] text-slate-400">Platform tips</p>
-              <ul className="mt-5 space-y-3 text-sm">
-                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-primary" /> Keep your profile current to rank higher.</li>
-                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-secondary" /> Upload documents before the next review.</li>
-                <li className="flex items-start gap-3"><span className="mt-1 h-2.5 w-2.5 rounded-full bg-white" /> Use assessment insight to improve ranking.</li>
+              <ul className="mt-4 space-y-2.5 text-sm">
+                <li className="flex items-start gap-3"><span className="mt-1 h-2 w-2 rounded-full bg-primary shrink-0" /> Keep your profile current to rank higher.</li>
+                <li className="flex items-start gap-3"><span className="mt-1 h-2 w-2 rounded-full bg-secondary shrink-0" /> Upload documents before the next review.</li>
+                <li className="flex items-start gap-3"><span className="mt-1 h-2 w-2 rounded-full bg-white shrink-0" /> Use assessment insight to improve ranking.</li>
               </ul>
             </Card>
+
+            {/* Smart status card based on onboarding step */}
+            {user.onboardingStep === 'verification' && !user.isVerified && (
+              <Card className="rounded-[2rem] border-yellow-200 bg-yellow-50 shadow-xl p-6">
+                <p className="text-sm uppercase tracking-[0.24em] text-yellow-600">Under review</p>
+                <h2 className="mt-3 text-xl font-semibold text-yellow-800">Verification in progress</h2>
+                <p className="mt-2 text-sm text-yellow-700">Our team is reviewing your documents. You'll be notified once approved (typically 24-48 hours).</p>
+              </Card>
+            )}
+            {user.onboardingStep !== 'verification' && !user.isVerified && (
+              <Card className="rounded-[2rem] border-primary/20 bg-primary/5 shadow-xl p-6">
+                <p className="text-sm uppercase tracking-[0.24em] text-primary/80">Almost there</p>
+                <h2 className="mt-3 text-xl font-semibold text-primary">Complete your onboarding</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {user.onboardingStep === 'signup' && 'Finish creating your account to get started.'}
+                  {user.onboardingStep === 'profile' && 'Complete your profile to unlock assessment and verification.'}
+                  {user.onboardingStep === 'test' && 'Take the assessment to strengthen your profile.'}
+                </p>
+                <Button size="sm" className="mt-3" onClick={() => navigate('/dashboard')}>Continue onboarding</Button>
+              </Card>
+            )}
+            {user.isVerified && (
+              <Card className="rounded-[2rem] border-green-200 bg-green-50 shadow-xl p-6">
+                <p className="text-sm uppercase tracking-[0.24em] text-green-600">All set</p>
+                <h2 className="mt-3 text-xl font-semibold text-green-800">You're verified!</h2>
+                <p className="mt-2 text-sm text-green-700">Your profile is live on the catalogue. Keep it updated for better visibility.</p>
+              </Card>
+            )}
           </aside>
         </section>
 
@@ -317,7 +329,9 @@ export default function TutorPortal() {
                       </div>
                       {user.classType && (
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="capitalize">{user.classType === 'hybrid' ? '🔄 Hybrid' : user.classType === 'virtual' ? '💻 Virtual' : '🏫 In-Person'}</Badge>
+                          <Badge variant="outline" className="capitalize gap-1">
+                            {user.classType === 'hybrid' ? <><RefreshCw className="w-3 h-3" /> Hybrid</> : user.classType === 'virtual' ? <><Monitor className="w-3 h-3" /> Virtual</> : <><Users className="w-3 h-3" /> In-Person</>}
+                          </Badge>
                         </div>
                       )}
                     </div>
@@ -579,10 +593,10 @@ export default function TutorPortal() {
                 <div className="bg-primary/5 rounded-xl p-6 border border-primary/10">
                   <h3 className="text-lg font-bold mb-2 text-primary">Why take the assessment?</h3>
                   <ul className="space-y-2 text-sm">
-                    <li className="flex items-center gap-2">✅ Appear higher in the tutor catalogue</li>
-                    <li className="flex items-center gap-2">✅ Qualify for premium teaching rates</li>
-                    <li className="flex items-center gap-2">✅ Earn badges for your profile</li>
-                    <li className="flex items-center gap-2">✅ Gain priority for student bookings</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> Appear higher in the tutor catalogue</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> Qualify for premium teaching rates</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> Earn badges for your profile</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> Gain priority for student bookings</li>
                   </ul>
                   <div className="mt-6 flex flex-col sm:flex-row gap-3">
                     <Link to="/assessment" className="flex-1">

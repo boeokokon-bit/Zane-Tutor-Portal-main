@@ -144,6 +144,12 @@ export const authApi = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+
+  changePassword: (currentPassword: string, newPassword: string) =>
+    apiFetch<{ success: boolean; message: string; token?: string }>('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    }),
 };
 
 // ── Tutor Profile API ──

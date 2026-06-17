@@ -94,35 +94,52 @@ export interface TutorProfile {
   currentWorkplace?: string;
   academicAchievements?: string;
   isCorpsMember?: boolean;
+  privacyConsentDate?: string;
   portalIntent?: 'teach' | 'lms';
   lmsTeachingTrack?: LmsTeachingTrack;
   monthlyPlanOptIn?: boolean;
+  skillCategories?: string[];
+  lane?: string;
 }
 
 export const GAMIFICATION_BADGES: { id: string; label: string; description: string; icon: string; pointsRequired: number }[] = [
-  { id: 'profile_complete', label: 'Profile Pro', description: 'Completed 100% of your profile', icon: '🏆', pointsRequired: 50 },
-  { id: 'first_module', label: 'Quick Learner', description: 'Completed your first training module', icon: '📚', pointsRequired: 100 },
-  { id: 'all_modules', label: 'Training Champion', description: 'Completed all training modules', icon: '🎓', pointsRequired: 500 },
-  { id: 'verified', label: 'Verified Tutor', description: 'Successfully verified by Zane Tutors', icon: '✅', pointsRequired: 200 },
-  { id: 'five_star', label: 'Five Star Tutor', description: 'Received a 5-star review', icon: '⭐', pointsRequired: 300 },
-  { id: 'tutor_of_month', label: 'Tutor of the Month', description: 'Selected as Tutor of the Month', icon: '👑', pointsRequired: 1000 },
+  { id: 'profile_complete', label: 'Profile Pro', description: 'Completed 100% of your profile', icon: 'Trophy', pointsRequired: 50 },
+  { id: 'first_module', label: 'Quick Learner', description: 'Completed your first training module', icon: 'BookOpen', pointsRequired: 100 },
+  { id: 'all_modules', label: 'Training Champion', description: 'Completed all training modules', icon: 'GraduationCap', pointsRequired: 500 },
+  { id: 'verified', label: 'Verified Tutor', description: 'Successfully verified by Zane Tutors', icon: 'BadgeCheck', pointsRequired: 200 },
+  { id: 'five_star', label: 'Five Star Tutor', description: 'Received a 5-star review', icon: 'Star', pointsRequired: 300 },
+  { id: 'tutor_of_month', label: 'Tutor of the Month', description: 'Selected as Tutor of the Month', icon: 'Crown', pointsRequired: 1000 },
 ];
 
-export const SUBJECTS = [
+export const ACADEMIC_SUBJECTS = [
   'Mathematics', 'Physics', 'Chemistry', 'Biology',
   'English', 'Computer Science', 'Economics',
   'Further Mathematics', 'Accounting', 'Literature',
-  'AI literacy', 'Baking', 'Digital content creation', 
-  'Fashion Design', 'Data analysis and visualization', 
-  'Entrepreneurship basics', 'Marketing fundamentals', 
-  'Foreign languages', 'Personal budgeting', 
-  'Video Editing', 'Public speaking', 
-  'Robotics fundamentals', 'Sustainable technologies'
 ];
 
+export const SKILL_SUBJECTS = [
+  'AI literacy', 'Baking', 'Digital content creation',
+  'Fashion Design', 'Data analysis and visualization',
+  'Entrepreneurship basics', 'Marketing fundamentals',
+  'Foreign languages', 'Personal budgeting',
+  'Video Editing', 'Public speaking',
+  'Robotics fundamentals', 'Sustainable technologies',
+];
+
+// Combined list kept for backward-compat with code that filters/searches all subjects.
+export const SUBJECTS = [...ACADEMIC_SUBJECTS, ...SKILL_SUBJECTS];
+
 export const LOCATIONS = [
-  'Lagos', 'Abuja', 'Port Harcourt', 'Ibadan',
-  'Kano', 'Online/Flexible', 'Enugu', 'Akwa Ibom'
+  // Nigeria
+  'Lagos', 'Abuja', 'Port Harcourt', 'Ibadan', 'Kano', 'Enugu', 'Akwa Ibom',
+  'Ogun', 'Oyo', 'Kaduna', 'Anambra', 'Delta', 'Edo', 'Ondo', 'Osun', 'Abia',
+  'Rivers', 'Cross River', 'Benue', 'Niger', 'Borno', 'Adamawa', 'Gombe',
+  'Bauchi', 'Taraba', 'Plateau', 'Sokoto', 'Kebbi', 'Zamfara', 'Katsina',
+  'Jigawa', 'Yobe', 'Kwara', 'Kogi', 'Ekiti', 'Bayelsa', 'Ebonyi', 'Imo',
+  'Nassarawa', 'FCT (Abuja)',
+  // International
+  'Online (Global)', 'United States', 'United Kingdom', 'Canada', 'Australia',
+  'South Africa', 'Ghana', 'Kenya', 'United Arab Emirates',
 ];
 
 export const LEVELS = [

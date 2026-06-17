@@ -143,12 +143,6 @@ export default function AdminDashboard() {
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   if (!user || !isAdmin) return null;
 
-  useEffect(() => {
-    if (allTutors.length > 0) {
-      console.log("Admin Debug - All Tutors Data:", allTutors);
-    }
-  }, [allTutors]);
-
   const filtered = allTutors.filter(t => {
     const matchSearch = !search ||
       `${t.firstName} ${t.lastName}`.toLowerCase().includes(search.toLowerCase()) ||
@@ -229,7 +223,7 @@ export default function AdminDashboard() {
             badges: [...new Set([...(tutor.gamification?.badges || []), 'tutor_of_month'])],
           },
         });
-        toast.success(`${tutor.firstName} is now Tutor of the Month! 👑`);
+        toast.success(`${tutor.firstName} is now Tutor of the Month!`);
         break;
       case 'nudge':
         nudgeTutor(tutor.id, adminNotes);
@@ -710,7 +704,7 @@ export default function AdminDashboard() {
                   </div>
                   <div>
                     <p className="text-muted-foreground text-xs">TRCN Certified</p>
-                    <p className="font-medium">{selectedTutor.trcnCertified ? '✅ Yes' : '❌ No'}</p>
+                    <p className="font-medium">{selectedTutor.trcnCertified ? 'Yes' : 'No'}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground text-xs">Class Type</p>
@@ -718,16 +712,43 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                {/* Rating */}
-                {selectedTutor.rating && (
-                  <div>
-                    <p className="text-muted-foreground text-xs mb-1">Rating</p>
-                    <div className="flex items-center gap-2">
-                      <StarRating rating={selectedTutor.rating} size="sm" />
-                      <span className="text-sm">({selectedTutor.reviewCount} reviews)</span>
-                    </div>
+                {/* Rating - Admin can set rating */}
+                <div>
+                  <p className="text-muted-foreground text-xs mb-1">Rating (Admin Set)</p>
+                  <div className="flex items-center gap-2">
+                    <StarRating rating={selectedTutor.rating || 0} size="sm" />
+                    <span className="text-sm">({selectedTutor.reviewCount || 0} reviews)</span>
                   </div>
-                )}
+                  <div className="flex items-center gap-1 mt-2">
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => {
+                          updateTutorAdmin(selectedTutor.id, { rating: star });
+                          setSelectedTutor({ ...selectedTutor, rating: star });
+                          toast.success(`Rating set to ${star} star${star > 1 ? 's' : ''}`);
+                        }}
+                        className="p-0.5 hover:scale-110 transition-transform"
+                      >
+                        <Star className={`w-5 h-5 ${star <= (selectedTutor.rating || 0) ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground'}`} />
+                      </button>
+                    ))}
+                    {(selectedTutor.rating || 0) > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          updateTutorAdmin(selectedTutor.id, { rating: 0 });
+                          setSelectedTutor({ ...selectedTutor, rating: 0 });
+                          toast.success('Rating cleared');
+                        }}
+                        className="ml-2 text-xs text-muted-foreground hover:text-destructive underline"
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                </div>
 
                 {selectedTutor.subjects.length > 0 && (
                   <div>
@@ -759,7 +780,7 @@ export default function AdminDashboard() {
                     <div>
                       <p className="text-muted-foreground mb-0.5">Tutor Type</p>
                       <p className="font-semibold">
-                        {selectedTutor.isCorpsMember ? '🎖 NYSC / Corps Member' : '🎓 Professional / Graduate'}
+                        {selectedTutor.isCorpsMember ? 'NYSC / Corps Member' : 'Professional / Graduate'}
                       </p>
                     </div>
                   </div>
@@ -957,7 +978,7 @@ export default function AdminDashboard() {
                       const badge = GAMIFICATION_BADGES.find(gb => gb.id === b);
                       return badge ? <span key={b} title={badge.label} className="text-sm">{badge.icon}</span> : null;
                     })}
-                    {selectedTutor.gamification.tutorOfTheMonth && <Badge className="bg-yellow-100 text-yellow-800 text-[10px]">👑 TOTM</Badge>}
+                    {selectedTutor.gamification.tutorOfTheMonth && <Badge className="bg-yellow-100 text-yellow-800 text-[10px]"><Crown className="w-3 h-3 mr-1" /> TOTM</Badge>}
                   </div>
                 )}
 
@@ -1058,7 +1079,7 @@ export default function AdminDashboard() {
                   {actionDialog.type === 'delete' && 'This action cannot be undone. The tutor will be permanently removed.'}
                   {actionDialog.type === 'unverify' && 'This tutor will lose their verified status and be removed from the catalogue until re-verified.'}
                   {actionDialog.type === 'hide' && (actionDialog.tutor.hiddenFromCatalogue ? 'This tutor will be shown on the catalogue again.' : 'This tutor will be hidden from the catalogue but remain verified.')}
-                  {actionDialog.type === 'totm' && 'This will award 1,000 points, grant the 👑 badge, and display them as Tutor of the Month. The previous TOTM will be replaced.'}
+                  {actionDialog.type === 'totm' && 'This will award 1,000 points, grant the Tutor of the Month badge, and display them as Tutor of the Month. The previous TOTM will be replaced.'}
                 </DialogDescription>
               </DialogHeader>
               {(actionDialog.type === 'approve' || actionDialog.type === 'reject' || actionDialog.type === 'nudge') && (
@@ -1082,7 +1103,7 @@ export default function AdminDashboard() {
                   {actionDialog.type === 'delete' && 'Remove'}
                   {actionDialog.type === 'unverify' && 'Unverify'}
                   {actionDialog.type === 'hide' && (actionDialog.tutor.hiddenFromCatalogue ? 'Show on Catalogue' : 'Hide from Catalogue')}
-                  {actionDialog.type === 'totm' && '👑 Award TOTM'}
+                  {actionDialog.type === 'totm' && <><Crown className="w-4 h-4 mr-1" /> Award TOTM</>}
                 </Button>
               </DialogFooter>
             </>
