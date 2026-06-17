@@ -2,7 +2,7 @@ import { Link, useLocation, NavLink as RouterNavLink, NavLinkProps } from 'react
 import { forwardRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
-import { Home, ExternalLink, User, LogOut, LayoutDashboard, Shield, Menu as MenuIcon, Copy } from 'lucide-react';
+import { Home, ExternalLink, User, LogOut, LayoutDashboard, Shield, Menu as MenuIcon, Copy, BookOpen } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { Drawer, DrawerTrigger, DrawerContent } from '@/components/ui/drawer';
@@ -39,10 +39,10 @@ function Header() {
   const isHome = location.pathname === '/';
 
   return (
-    <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
+    <header className="sticky top-0 z-50 bg-primary text-primary-foreground shadow-md">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2">
               <Logo variant="chrome" imgClassName="w-8 h-8" textClassName="sr-only" />
             </Link>
@@ -50,7 +50,7 @@ function Header() {
             <div className="md:hidden">
               <Drawer open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <DrawerTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={() => setMobileMenuOpen(true)}>
+                  <Button variant="ghost" size="sm" onClick={() => setMobileMenuOpen(true)} className="text-primary-foreground hover:bg-primary-foreground/10">
                     <MenuIcon className="w-5 h-5" />
                   </Button>
                 </DrawerTrigger>
@@ -88,20 +88,20 @@ function Header() {
           <div className="hidden md:flex flex-1 justify-center items-center gap-3">
             {!isHome && (
               <Link to="/">
-                <Button variant="ghost" size="sm" className="gap-2">
+                <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10">
                   <Home className="w-4 h-4" />
                   <span>Home</span>
                 </Button>
               </Link>
             )}
             <Link to="/catalogue">
-              <Button variant="ghost" size="sm" className="gap-2">
+              <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10">
                 <ExternalLink className="w-4 h-4" />
                 <span className="hidden sm:inline">Catalogue</span>
               </Button>
             </Link>
             <Link to="/training">
-              <Button variant="ghost" size="sm" className="gap-2">
+              <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10">
                 <BookOpen className="w-4 h-4" />
                 <span className="hidden sm:inline">Training</span>
               </Button>
@@ -110,7 +110,7 @@ function Header() {
 
           <div className="hidden md:flex items-center gap-2">
             <a href="https://zanetutors.com.ng" target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="sm" className="gap-2">
+              <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10">
                 <ExternalLink className="w-4 h-4" />
                 <span className="hidden sm:inline">Zane Home</span>
               </Button>
@@ -119,27 +119,27 @@ function Header() {
               <>
                 {isAdmin && (
                   <Link to="/admin">
-                    <Button variant="ghost" size="sm" className="gap-2">
+                    <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10">
                       <Shield className="w-4 h-4" />
                       <span className="hidden sm:inline">Admin</span>
                     </Button>
                   </Link>
                 )}
                 <Link to="/tutor">
-                  <Button variant="ghost" size="sm" className="gap-2">
+                  <Button variant="ghost" size="sm" className="gap-2 text-primary-foreground hover:bg-primary-foreground/10">
                     <LayoutDashboard className="w-4 h-4" />
                     <span className="hidden sm:inline">Dashboard</span>
                   </Button>
                 </Link>
-                <span className="hidden md:inline text-sm text-muted-foreground">{user?.firstName}</span>
-                <Button variant="outline" size="sm" className="gap-2" onClick={logout}>
+                <span className="hidden md:inline text-sm text-primary-foreground/80">{user?.firstName}</span>
+                <Button variant="outline" size="sm" className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" onClick={logout}>
                   <LogOut className="w-4 h-4" />
                   <span className="hidden sm:inline">Log Out</span>
                 </Button>
               </>
             ) : (
               <Link to="/login">
-                <Button variant="outline" size="sm" className="gap-2 border-primary/30 text-primary hover:bg-primary/10">
+                <Button variant="outline" size="sm" className="gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
                   <User className="w-4 h-4" />
                   <span className="hidden sm:inline">Sign In</span>
                 </Button>

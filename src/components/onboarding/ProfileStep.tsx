@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { SUBJECTS, LOCATIONS, LEVELS, CLASS_TYPES, LmsTeachingTrack, PastProject } from '@/types/tutor';
+import { LOCATIONS, CLASS_TYPES, LmsTeachingTrack, PastProject } from '@/types/tutor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +15,7 @@ import AvailabilityPicker from '@/components/onboarding/AvailabilityPicker';
 import { toast } from 'sonner';
 import { Save, ArrowRight, Plus, Trash2 } from 'lucide-react';
 import { MACRO_CATEGORIES } from '@/lib/categories';
-import { resolveLane, getRequiredAssessments, LANE_LABELS } from '@/lib/lanes';
+import { resolveLane, getRequiredAssessments, LANE_LABELS, getSubjectListForLane, getLevelListForLane, laneUsesSchoolLevels } from '@/lib/lanes';
 
 export default function ProfileStep() {
   const { user, updateProfile, advanceStep } = useAuth();
@@ -54,6 +54,9 @@ export default function ProfileStep() {
     (isLMS && form.lmsTeachingTrack === 'academic');
   const requiresTeachingSubjects = form.portalIntent === 'teach' || form.lmsTeachingTrack === 'academic';
   const optionalText = (required: boolean) => required ? ' *' : ' (optional)';
+  const subjectList = getSubjectListForLane(lane);
+  const levelList = getLevelListForLane(lane);
+  const showLevels = laneUsesSchoolLevels(lane);
 
   const progress = useMemo(() => {
     const fields = [
@@ -170,14 +173,14 @@ export default function ProfileStep() {
             <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${form.portalIntent === 'teach' ? 'border-primary bg-primary/5' : 'border-border bg-background hover:border-primary/30'}`}>
               <RadioGroupItem value="teach" />
               <div>
-                <p className="text-sm font-medium">🚀 Teach with Zane</p>
+                <p className="text-sm font-medium">Teach with Zane</p>
                 <p className="text-xs text-muted-foreground">Join our tutor catalogue</p>
               </div>
             </label>
             <label className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${form.portalIntent === 'lms' ? 'border-primary bg-primary/5' : 'border-border bg-background hover:border-primary/30'}`}>
               <RadioGroupItem value="lms" />
               <div>
-                <p className="text-sm font-medium">💻 Use Classes LMS</p>
+                <p className="text-sm font-medium">Use Classes LMS</p>
                 <p className="text-xs text-muted-foreground">Manage my own students</p>
               </div>
             </label>
@@ -241,12 +244,30 @@ export default function ProfileStep() {
             </div>
             <div className="space-y-2">
                 <Label>Location *</Label>
-              <Select value={form.location} onValueChange={v => setForm(p => ({ ...p, location: v }))}>
+              <Select 
+                value={LOCATIONS.includes(form.location) ? form.location : '__custom'} 
+                onValueChange={v => {
+                  if (v === '__custom') {
+                    setForm(p => ({ ...p, location: '' }));
+                  } else {
+                    setForm(p => ({ ...p, location: v }));
+                  }
+                }}
+              >
                 <SelectTrigger><SelectValue placeholder="Select location" /></SelectTrigger>
                 <SelectContent>
                   {LOCATIONS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}
+                  <SelectItem value="__custom">Other (type below)</SelectItem>
                 </SelectContent>
               </Select>
+              {!LOCATIONS.includes(form.location) && (
+                <Input 
+                  placeholder="e.g. Berlin, Germany" 
+                  value={form.location} 
+                  onChange={e => setForm(p => ({ ...p, location: e.target.value }))} 
+                  className="mt-2" 
+                />
+              )}
             </div>
             <div className="space-y-2">
               <Label>Teaching Area (Category) *</Label>
@@ -261,20 +282,38 @@ export default function ProfileStep() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>Years of Experience</Label>
-              <Input type="number" min={0} value={form.experience} onChange={e => setForm(p => ({ ...p, experience: parseInt(e.target.value) || 0 }))} />
-            </div>
-            {form.portalIntent !== 'lms' && (
-              <div className="space-y-2">
-                <Label>Hourly Rate (₦)</Label>
-                <Input type="number" min={0} value={form.hourlyRate} onChange={e => setForm(p => ({ ...p, hourlyRate: parseInt(e.target.value) || 0 }))} />
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label>Current Work / Employer</Label>
-              <Input placeholder="e.g. Freelance Tutor" value={form.currentWork} onChange={e => setForm(p => ({ ...p, currentWork: e.target.value }))} />
-            </div>
+          <div className="space-y-2">
+            <Label>Brief Introduction</Label>
+            <p className="text-xs text-muted-foreground italic">This appears on your public profile — a warm, confident intro helps parents choose you.</p>
+            <Textarea 
+              placeholder="e.g. I'm a passionate Mathematics tutor with 5+ years of experience helping students build confidence in numbers. I believe every child can excel in Maths when given the right approach. I've helped over 50 students improve their WAEC and JAMB scores by at least two grade levels." 
+              value={form.briefIntro} 
+              onChange={e => setForm(p => ({ ...p, briefIntro: e.target.value }))} 
+              rows={4} 
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Teaching History</Label>
+            <p className="text-xs text-muted-foreground italic">Schools, numbers of students taught, and notable achievements build trust with parents.</p>
+            <Textarea 
+              placeholder="e.g. Taught at Lagos Model Secondary School (2020-2023), managed a class of 35 students with a 92% pass rate in WAEC. Also run a private home tutoring practice in Ikeja, covering JSS1-SS3 Mathematics and Further Mathematics." 
+              value={form.teachingHistory} 
+              onChange={e => setForm(p => ({ ...p, teachingHistory: e.target.value }))} 
+              rows={3} 
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Teaching Approach / Class Delivery</Label>
+            <p className="text-xs text-muted-foreground italic">Parents want to know how you teach — describe your style, structure, and what makes you effective.</p>
+            <Textarea 
+              placeholder="e.g. I start each lesson with a quick recap, then use real-life examples to explain new concepts. I give practice exercises after every topic and track progress with monthly mini-tests. For virtual classes, I use interactive whiteboards and screen sharing to make lessons engaging." 
+              value={form.classDelivery} 
+              onChange={e => setForm(p => ({ ...p, classDelivery: e.target.value }))} 
+              rows={3} 
+            />
+          </div>
             {form.portalIntent !== 'lms' && (
               <div className="space-y-2">
                 <Label>Availability</Label>
@@ -284,9 +323,9 @@ export default function ProfileStep() {
           </div>
 
           <div className="space-y-2">
-            <Label>Subjects You Teach{optionalText(requiresTeachingSubjects)}</Label>
+            <Label>{lane === 'skills' || lane === 'lms_creator' ? 'Skills You Teach' : 'Subjects You Teach'}{optionalText(requiresTeachingSubjects)}</Label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {SUBJECTS.map(s => (
+              {subjectList.map(s => (
                 <label key={s} className="flex items-center gap-2 text-sm cursor-pointer">
                   <Checkbox checked={form.subjects.includes(s)} onCheckedChange={() => setForm(p => ({ ...p, subjects: toggleItem(p.subjects, s) }))} />
                   {s}
@@ -295,34 +334,20 @@ export default function ProfileStep() {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Preferred Teaching Levels{optionalText(requiresTeachingSubjects)}</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {LEVELS.map(l => (
-                <label key={l} className="flex items-center gap-2 text-sm cursor-pointer">
-                  <Checkbox checked={form.preferredLevels.includes(l)} onCheckedChange={() => setForm(p => ({ ...p, preferredLevels: toggleItem(p.preferredLevels, l) }))} />
-                  {l}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {form.portalIntent !== 'lms' && (
+          {showLevels && (
             <div className="space-y-2">
-              <Label>Brief Introduction</Label>
-              <Textarea placeholder="Tell parents about yourself..." value={form.briefIntro} onChange={e => setForm(p => ({ ...p, briefIntro: e.target.value }))} rows={3} />
+              <Label>Preferred Teaching Levels{optionalText(requiresTeachingSubjects)}</Label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {levelList.map(l => (
+                  <label key={l} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <Checkbox checked={form.preferredLevels.includes(l)} onCheckedChange={() => setForm(p => ({ ...p, preferredLevels: toggleItem(p.preferredLevels, l) }))} />
+                    {l}
+                  </label>
+                ))}
+              </div>
             </div>
           )}
 
-          <div className="space-y-2">
-            <Label>Teaching History</Label>
-            <Textarea placeholder="Schools taught at, number of students, notable achievements..." value={form.teachingHistory} onChange={e => setForm(p => ({ ...p, teachingHistory: e.target.value }))} rows={3} />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Teaching Approach / Class Delivery</Label>
-            <Textarea placeholder="Describe how you structure and deliver your classes..." value={form.classDelivery} onChange={e => setForm(p => ({ ...p, classDelivery: e.target.value }))} rows={3} />
-          </div>
 
           <div className="space-y-3">
             <Label>Class Type</Label>

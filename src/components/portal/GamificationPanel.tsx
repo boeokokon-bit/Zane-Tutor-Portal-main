@@ -4,7 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import { Trophy, Star, Flame, Medal } from 'lucide-react';
+import { Trophy, Star, Flame, Medal, Crown, Award, CheckCircle2 } from 'lucide-react';
+
+const badgeIcons: Record<string, React.ReactNode> = {
+  Trophy: <Trophy className="w-5 h-5 text-primary" />,
+  BookOpen: <Star className="w-5 h-5 text-accent" />,
+  GraduationCap: <Award className="w-5 h-5 text-amber-500" />,
+  BadgeCheck: <CheckCircle2 className="w-5 h-5 text-success" />,
+  Star: <Star className="w-5 h-5 text-yellow-500" />,
+  Crown: <Crown className="w-5 h-5 text-amber-500" />,
+};
 
 export default function GamificationPanel() {
   const { user, allTutors } = useAuth();
@@ -58,7 +67,7 @@ export default function GamificationPanel() {
       {gam.tutorOfTheMonth && (
         <Card className="border-yellow-300 bg-gradient-to-r from-yellow-50 to-orange-50">
           <CardContent className="py-4 flex items-center gap-3">
-            <span className="text-3xl">👑</span>
+            <Crown className="w-8 h-8 text-amber-500" />
             <div>
               <p className="font-bold text-yellow-800">Tutor of the Month!</p>
               <p className="text-sm text-yellow-700">You've been selected as this month's top tutor. Congratulations!</p>
@@ -86,7 +95,7 @@ export default function GamificationPanel() {
                       : 'border-dashed border-muted-foreground/30 opacity-50'
                   }`}
                 >
-                  <span className="text-2xl block mb-1">{badge.icon}</span>
+                  <span className="block mb-1 flex justify-center">{badgeIcons[badge.icon] || <Trophy className="w-5 h-5 text-muted-foreground" />}</span>
                   <p className="text-xs font-semibold">{badge.label}</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">{badge.description}</p>
                   {earned ? (
@@ -120,12 +129,12 @@ export default function GamificationPanel() {
                   }`}
                 >
                   <span className={`text-lg font-bold w-8 text-center ${idx < 3 ? 'text-primary' : 'text-muted-foreground'}`}>
-                    {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}`}
+                    {idx === 0 ? <Trophy className="w-5 h-5 inline text-yellow-500" /> : idx === 1 ? <Medal className="w-5 h-5 inline text-slate-400" /> : idx === 2 ? <Medal className="w-5 h-5 inline text-amber-700" /> : `${idx + 1}`}
                   </span>
                   <div className="flex-1">
                     <p className="text-sm font-medium">
                       {entry.name}
-                      {entry.isTotm && <span className="ml-1">👑</span>}
+                      {entry.isTotm && <Crown className="w-3.5 h-3.5 inline ml-1 text-amber-500" />}
                       {entry.id === user.id && <span className="text-xs text-primary ml-1">(You)</span>}
                     </p>
                     <p className="text-xs text-muted-foreground">{entry.badges} badges</p>

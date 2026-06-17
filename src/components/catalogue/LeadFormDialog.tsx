@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TutorProfile } from '@/types/tutor';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Link } from 'react-router-dom';
 import { catalogueApi } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
+import { hasGuestConsented, recordGuestConsent } from '@/lib/consentUtils';
 import { MessageSquare, Phone, User, Banknote, Loader2, Calendar, Mail } from 'lucide-react';
 
 interface LeadFormDialogProps {
@@ -19,6 +22,7 @@ interface LeadFormDialogProps {
 export default function LeadFormDialog({ tutor, open, onOpenChange, type }: LeadFormDialogProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [consent, setConsent] = useState(false);
   const [formData, setFormData] = useState({
     parentName: '',
     parentEmail: '',
@@ -26,6 +30,13 @@ export default function LeadFormDialog({ tutor, open, onOpenChange, type }: Lead
     message: '',
     offerAmount: '',
   });
+
+  // Auto-check consent if previously given for this email
+  useEffect(() => {
+    if (formData.parentEmail && hasGuestConsented(formData.parentEmail)) {
+      setConsent(true);
+    }
+  }, [formData.parentEmail]);
 
   if (!tutor) return null;
 
@@ -39,6 +50,14 @@ export default function LeadFormDialog({ tutor, open, onOpenChange, type }: Lead
       });
       return;
     }
+    if (!consent) {
+      toast({
+        title: "Consent required",
+        description: "Please agree to the Privacy Policy to proceed.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -48,6 +67,9 @@ export default function LeadFormDialog({ tutor, open, onOpenChange, type }: Lead
         ...formData
       });
       
+      // Persist consent so it's not asked again for this email
+      recordGuestConsent(formData.parentEmail);
+
       toast({
         title: "Offer Sent!",
         description: "We've received your inquiry and will get back to you shortly.",
@@ -55,6 +77,7 @@ export default function LeadFormDialog({ tutor, open, onOpenChange, type }: Lead
       
       onOpenChange(false);
       setFormData({ parentName: '', parentEmail: '', parentPhone: '', message: '', offerAmount: '' });
+      setConsent(false);
     } catch (error) {
       toast({
         title: "Error",
@@ -157,8 +180,22 @@ export default function LeadFormDialog({ tutor, open, onOpenChange, type }: Lead
             />
           </div>
 
+          {/* Privacy Consent */}
+          <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border">
+            <Checkbox
+              id="consent"
+              checked={consent}
+              onCheckedChange={(checked) => setConsent(!!checked)}
+              className="mt-0.5"
+            />
+            <Label htmlFor="consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
+              I consent to Zane Tutors collecting and processing my personal data (name, email, phone, and inquiry details) for the purpose of responding to my booking request. I have read and agree to the{' '}
+              <Link to="/privacy" target="_blank" className="text-primary underline">Privacy Policy</Link>.
+            </Label>
+          </div>
+
           <DialogFooter className="pt-2">
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading || !consent}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {type === 'offer' ? 'Send Offer' : 'Request Booking'}
             </Button>

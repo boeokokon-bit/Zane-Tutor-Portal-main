@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MapPin, Clock, BookOpen, CheckCircle, ShieldCheck, Monitor, Users, Repeat, Crown } from 'lucide-react';
+import { MapPin, Clock, BookOpen, CheckCircle, ShieldCheck, Monitor, Users, Repeat, Crown, Award } from 'lucide-react';
 import StarRating from './StarRating';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -51,8 +51,8 @@ export default function TutorCard({ tutor }: TutorCardProps) {
           {/* Left Badge: TOTM */}
           {isTOTM && (
             <div className="absolute top-3 left-3">
-              <Badge className="bg-amber-400 text-amber-900 border-amber-500 gap-1 animate-pulse shadow-sm">
-                <Crown className="w-3 h-3 fill-amber-900" /> TOP TUTOR
+              <Badge className="bg-amber-500 text-white border-amber-600 gap-1 animate-pulse shadow-sm">
+                <Crown className="w-3 h-3" /> TOP TUTOR
               </Badge>
             </div>
           )}
@@ -60,12 +60,12 @@ export default function TutorCard({ tutor }: TutorCardProps) {
           {/* Right badges */}
           <div className="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
             {t.isVerified && (
-              <Badge className="bg-emerald-500 text-white text-xs gap-1">
+              <Badge className="bg-success text-white text-xs gap-1">
                 <CheckCircle className="w-3 h-3" /> Verified
               </Badge>
             )}
             {t.trcnCertified && (
-              <Badge className="bg-blue-600 text-white text-xs gap-1">
+              <Badge className="bg-primary text-white text-xs gap-1">
                 <ShieldCheck className="w-3 h-3" /> TRCN
               </Badge>
             )}
@@ -107,7 +107,7 @@ export default function TutorCard({ tutor }: TutorCardProps) {
               <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {t.experience} yrs</span>
             )}
             {t.hourlyRate > 0 && (
-              <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> ₦{displayRate.toLocaleString()}/hr</span>
+              <span className="flex items-center gap-1"><Award className="w-3.5 h-3.5" /> ₦{displayRate.toLocaleString()}/hr</span>
             )}
           </div>
 

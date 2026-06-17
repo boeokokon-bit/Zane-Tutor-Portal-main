@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { SUBJECTS, LOCATIONS, LEVELS, CLASS_TYPES } from '@/types/tutor';
+import { LOCATIONS, CLASS_TYPES } from '@/types/tutor';
+import { resolveLane, getSubjectListForLane, getLevelListForLane, laneUsesSchoolLevels } from '@/lib/lanes';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +17,11 @@ import { Save } from 'lucide-react';
 
 export default function InlineProfileEditor() {
   const { user, updateProfile } = useAuth();
+  const lane = resolveLane(user || undefined);
+  const subjectList = getSubjectListForLane(lane);
+  const levelList = getLevelListForLane(lane);
+  const showLevels = laneUsesSchoolLevels(lane);
+  const subjectLabel = (lane === 'skills' || lane === 'lms_creator') ? 'Skills You Teach' : 'Subjects You Teach';
   const [form, setForm] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
@@ -108,9 +114,9 @@ export default function InlineProfileEditor() {
       </div>
 
       <div className="space-y-2 w-full">
-        <Label>Subjects You Teach</Label>
+        <Label>{subjectLabel}</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {SUBJECTS.map(s => (
+          {subjectList.map(s => (
             <label key={s} className="flex items-center gap-2 text-sm cursor-pointer">
               <Checkbox checked={form.subjects.includes(s)} onCheckedChange={() => setForm(p => ({ ...p, subjects: toggleItem(p.subjects, s) }))} />
               {s}
@@ -119,17 +125,19 @@ export default function InlineProfileEditor() {
         </div>
       </div>
 
-      <div className="space-y-2 w-full">
-        <Label>Preferred Teaching Levels</Label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {LEVELS.map(l => (
-            <label key={l} className="flex items-center gap-2 text-sm cursor-pointer">
-              <Checkbox checked={form.preferredLevels.includes(l)} onCheckedChange={() => setForm(p => ({ ...p, preferredLevels: toggleItem(p.preferredLevels, l) }))} />
-              {l}
-            </label>
-          ))}
+      {showLevels && (
+        <div className="space-y-2 w-full">
+          <Label>Preferred Teaching Levels</Label>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {levelList.map(l => (
+              <label key={l} className="flex items-center gap-2 text-sm cursor-pointer">
+                <Checkbox checked={form.preferredLevels.includes(l)} onCheckedChange={() => setForm(p => ({ ...p, preferredLevels: toggleItem(p.preferredLevels, l) }))} />
+                {l}
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="space-y-2">
         <Label>Brief Introduction</Label>
